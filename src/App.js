@@ -9,19 +9,18 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Edit <code>src/App.js</code> and save to reload.
+            基于WebIDE的快速物联网开发平台<br />powered by&nbsp;
+              <a 
+                className="App-link" 
+                href="https://reactjs.org" 
+                target="_blank" 
+                rel="noopener noreferrer">
+                React
+              </a>
           </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
         </header>
       </div>
-    );
+    )
   }
 }
 
