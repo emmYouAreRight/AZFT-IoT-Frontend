@@ -8,27 +8,27 @@ const FooterView = () => (
     <GlobalFooter
       links={[
         {
-          key: 'Pro 首页',
-          title: 'Pro 首页',
-          href: 'https://pro.ant.design',
+          key: 'TinyLink',
+          title: 'TinyLink',
+          href: 'http://tinylink.emnets.org',
           blankTarget: true,
         },
         {
-          key: 'github',
-          title: <Icon type="github" />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          key: 'TinySim',
+          title: 'TinySim',
+          href: 'http://47.92.240.253/simulator/home/',
           blankTarget: true,
         },
         {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          key: 'OneLink',
+          title: 'OneLink',
+          href: '',
           blankTarget: true,
         },
       ]}
       copyright={
         <Fragment>
-          Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
+          Web IDE Copyright <Icon type="copyright" /> EmYouAreRight
         </Fragment>
       }
     />

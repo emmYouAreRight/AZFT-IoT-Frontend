@@ -17,7 +17,6 @@ class CardList extends PureComponent {
     dispatch({
       type: 'list/fetch',
       payload: {
-        count: 8,
       },
     });
   }
@@ -31,22 +30,10 @@ class CardList extends PureComponent {
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
-          段落示意：蚂蚁金服务设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态，
-          提供跨越设计与开发的体验解决方案。
+          Web IDE工作空间，使用Theia进行物联网应用开发，可以连接TinyLink，TinySim，OneLink，UDC
         </p>
         <div className={styles.contentLink}>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg" />{' '}
-            快速开始
-          </a>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg" />{' '}
-            产品简介
-          </a>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg" />{' '}
-            产品文档
-          </a>
+          
         </div>
       </div>
     );
@@ -61,7 +48,7 @@ class CardList extends PureComponent {
     );
 
     return (
-      <PageHeaderWrapper title="卡片列表" content={content} extraContent={extraContent}>
+      <PageHeaderWrapper title="工作空间管理" content={content} extraContent={extraContent}>
         <div className={styles.cardList}>
           <List
             rowKey="id"
@@ -71,12 +58,13 @@ class CardList extends PureComponent {
             renderItem={item =>
               item ? (
                 <List.Item key={item.id}>
-                  <Card hoverable className={styles.card} actions={[<a>操作一</a>, <a>操作二</a>]}>
+                  <Card hoverable className={styles.card} actions={[<a>开启</a>, <a>删除</a>]}>
                     <Card.Meta
-                      avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
-                      title={<a>{item.title}</a>}
+                      title={<a>{item.appName}</a>}
                       description={
                         <Ellipsis className={styles.item} lines={3}>
+                          {item.pname}<br />
+                          {item.pid}
                           {item.description}
                         </Ellipsis>
                       }
@@ -86,7 +74,7 @@ class CardList extends PureComponent {
               ) : (
                 <List.Item>
                   <Button type="dashed" className={styles.newButton}>
-                    <Icon type="plus" /> 新增产品
+                    <Icon type="plus" /> 新增工作空间
                   </Button>
                 </List.Item>
               )

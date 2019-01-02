@@ -35,7 +35,11 @@ export default {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        currentUser: action.payload || {},
+        currentUser: {
+          name: 'Serati Ma',
+          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+          userid: '00000001',
+        },
       };
     },
     changeNotifyCount(state, action) {
@@ -43,8 +47,7 @@ export default {
         ...state,
         currentUser: {
           ...state.currentUser,
-          notifyCount: action.payload.totalCount,
-          unreadCount: action.payload.unreadCount,
+          
         },
       };
     },

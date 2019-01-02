@@ -50,6 +50,7 @@ const getSubMenu = item => {
       children: filterMenuData(item.children), // eslint-disable-line
     };
   }
+  console.log(item);
   return item;
 };
 

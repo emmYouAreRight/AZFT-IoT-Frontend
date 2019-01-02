@@ -7,7 +7,7 @@ describe('Login', () => {
 
   beforeEach(async () => {
     await page.goto(`${BASE_URL}/user/login`, { waitUntil: 'networkidle2' });
-    await page.evaluate(() => window.localStorage.setItem('antd-pro-authority', 'guest'));
+    await page.evaluate(() => window.localStorage.setItem('webide-authority', 'guest'));
   });
 
   it('should login with failure', async () => {
@@ -29,6 +29,6 @@ describe('Login', () => {
     await page.click('button[type="submit"]');
     await page.waitForSelector('.ant-layout-sider h1'); // should display error
     const text = await page.evaluate(() => document.body.innerHTML);
-    expect(text).toContain('<h1>Ant Design Pro</h1>');
+    expect(text).toContain('<h1>Web IDE</h1>');
   });
 });

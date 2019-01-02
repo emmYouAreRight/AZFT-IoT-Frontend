@@ -1,7 +1,7 @@
 export default {
   'app.login.userName': 'userName',
   'app.login.password': 'password',
-  'app.login.message-invalid-credentials': 'Invalid username or password（admin/ant.design）',
+  'app.login.message-invalid-credentials': 'Invalid username or password',
   'app.login.message-invalid-verification-code': 'Invalid verification code',
   'app.login.tab-login-credentials': 'Credentials',
   'app.login.tab-login-mobile': 'Mobile number',
@@ -24,7 +24,7 @@ export default {
   'validation.password.required': 'Please enter your password!',
   'validation.password.twice': 'The passwords entered twice do not match!',
   'validation.password.strength.msg':
-    "Please enter at least 6 characters and don't use passwords that are easy to guess.",
+    "Please enter at least 5 characters and don't use passwords that are easy to guess.",
   'validation.password.strength.strong': 'Strength: strong',
   'validation.password.strength.medium': 'Strength: medium',
   'validation.password.strength.short': 'Strength: too short',
@@ -36,4 +36,13 @@ export default {
   'validation.date.required': 'Please select the start and end date',
   'validation.goal.required': 'Please enter a description of the goal',
   'validation.standard.required': 'Please enter a metric',
+  'validation.full_name.required': 'Please input your full_name!',
+  'validation.username.required': 'Please input your username!',
+  'validation.birthday.required': 'Please input your birthday!',
+  'validation.gender.required': 'Please input your gender!',
+  'validation.education.required': 'Please input your education!',
+  'validation.job.required': 'Please input your job!',
+  'validation.iOT_familiar.required': 'Please select your Experience in IOT development!',
+  'validation.embeded_familiar.required': 'Please select your Experience in embeded development!',
+  'validation.lan_familiar.required': 'Please select your Experience in C/C++ development!',
 };

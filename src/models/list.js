@@ -1,4 +1,5 @@
 import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
+import { getProject } from '@/services/project'
 
 export default {
   namespace: 'list',
@@ -9,10 +10,10 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryFakeList, payload);
+      const response = yield call(getProject, payload);
       yield put({
         type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        payload: Array.isArray(response.data) ? response.data : [],
       });
     },
     *appendFetch({ payload }, { call, put }) {
@@ -39,6 +40,7 @@ export default {
 
   reducers: {
     queryList(state, action) {
+      console.log(action.payload);
       return {
         ...state,
         list: action.payload,

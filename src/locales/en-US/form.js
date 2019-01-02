@@ -35,4 +35,13 @@ export default {
   'form.publicUsers.option.A': 'Colleague A',
   'form.publicUsers.option.B': 'Colleague B',
   'form.publicUsers.option.C': 'Colleague C',
+  'form.full_name.placeholder': 'Full name',
+  'form.username.placeholder': 'username',
+  'form.birthday.placeholder': 'birthday',
+  'form.gender.placeholder': 'gender',
+  'form.education.placeholder': 'education',
+  'form.job.placeholder': 'job',
+  'form.iOT_familiar.placeholder': 'Experience in IOT development',
+  'form.embeded_familiar.placeholder': 'Experience in embeded development',
+  'form.lan_familiar.placeholder': 'Experience in C/C++ development',
 };
