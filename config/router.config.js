@@ -89,6 +89,16 @@ export default [
         ],
       },
       {
+        path: '/webview',
+        component: '../layouts/webviewLayout', 
+        routes: [
+          {
+            path: '/webview/tinylink',
+            component: './Webview/Tinylink',
+          }
+        ]
+      }
+      {
         component: '404',
       },
     ],

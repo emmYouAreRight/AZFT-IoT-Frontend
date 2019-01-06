@@ -51,5 +51,6 @@ export async function userRegister(params) {
 }
 
 export async function userLogout() {
+  console.log('调用logout');
   return request('/user/logout');
 }

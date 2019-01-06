@@ -12,6 +12,12 @@ import styles from './CardList.less';
   loading: loading.models.list,
 }))
 class CardList extends PureComponent {
+  state = { visible: false, done: false };
+
+  formLayout = {
+    labelCol: { span: 7 },
+    wrapperCol: { span: 13 },
+  };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -19,13 +25,65 @@ class CardList extends PureComponent {
       payload: {
       },
     });
-  }
+  };
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+      current: undefined,
+    });
+  };
+
+  handleDone = () => {
+    setTimeout(() => this.addBtn.blur(), 0);
+    this.setState({
+      done: false,
+      visible: false,
+    });
+  };
+
+  handleCancel = () => {
+    setTimeout(() => this.addBtn.blur(), 0);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    const { current } = this.state;
+    const id = current ? current.id : '';
+
+    setTimeout(() => this.addBtn.blur(), 0);
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      this.setState({
+        done: true,
+      });
+      dispatch({
+        type: 'list/submit',
+        payload: { id, ...fieldsValue },
+      });
+    });
+  };
+
+  deleteItem = id => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'list/submit',
+      payload: { id },
+    });
+  };
+
 
   render() {
     const {
       list: { list },
       loading,
     } = this.props;
+
+    const { visible, done, current = {} } = this.state;
 
     const content = (
       <div className={styles.pageHeaderContent}>
@@ -81,6 +139,17 @@ class CardList extends PureComponent {
             }
           />
         </div>
+        <Modal
+          title={done ? null : `添加工作空间`}
+          className={styles.standardListForm}
+          width={640}
+          bodyStyle={done ? { padding: '72px 0' } : { padding: '28px 0 0' }}
+          destroyOnClose
+          visible={visible}
+          {...modalFooter}
+        >
+          {getModalContent()}
+        </Modal>
       </PageHeaderWrapper>
     );
   }
