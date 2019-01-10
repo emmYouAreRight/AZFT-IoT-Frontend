@@ -17,15 +17,15 @@ export default {
     *login({ payload }, { call, put }) {
       console.log(payload);
       const response = yield call(userLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          response,
-          currentAuthority: 'admin'
-        },
-      });
-      // Login successfully
       if (response.status === 'ok') {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: {
+            response,
+            currentAuthority: 'admin'
+          },
+        });
+        // Login successfully
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -47,6 +47,8 @@ export default {
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
+      
+      
 
     *logout(_, { call, put }) {
       yield call(userLogout);

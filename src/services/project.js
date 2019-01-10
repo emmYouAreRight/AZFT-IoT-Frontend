@@ -20,3 +20,29 @@ export async function createProject(params) {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
+
+export async function deleteProject(params) {
+  console.log(params);
+  const bodyForm = new FormData();
+  bodyForm.set('PID', params.pid);
+
+
+  return request('/project/delete_project', {
+    method: 'POST',
+    data: bodyForm,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}
+
+export async function createDocer(params) {
+  console.log('===========调用createDocer函数=============');
+  console.log(params);
+  const bodyForm = {
+    projectName: params.pname,
+  }
+  console.log(bodyForm);
+  return request('/docker/create', {
+    method: 'POST',
+    data: JSON.stringify(bodyForm),
+  })
+}

@@ -9,7 +9,7 @@ function checkStatus(response) {
     
     if(result.code == 0)
     {
-      console.log('ssssssssssssss');
+      console.log('=======requet函数调用ok========');
       result.status = 'ok'; //eslint-disable-line
       return result;
     }
@@ -17,7 +17,10 @@ function checkStatus(response) {
     {
       const error = new Error(response.statusText);
       error.response = response;
-      throw error;
+      notification.error({
+        message: `请求错误: ${url}`,
+        description: error.message,
+      });
     }   
   }
   const error = new Error(response.statusText);
