@@ -51,7 +51,7 @@ export default {
       if(response.status == 'ok') {
 
         console.log('open url');
-        theirUrl = response.data.url
+        const theirUrl = response.data.dockerURL;
         window.open(theirUrl);
       }
       
