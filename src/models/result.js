@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
 import { tinylink } from '@/services/webview';
+import { ok } from 'assert';
 
 
 export default {
@@ -22,7 +23,8 @@ export default {
         yield put({
             type: 'tinylinkresult',
             payload: {
-              ret,
+              ...ret,
+              status: 'ok',
             },
           });
       }
@@ -38,7 +40,7 @@ export default {
         console.log(state);
       return {
         ...state,
-        result: action.payload.ret,
+        result: action.payload,
       };
     },
   },

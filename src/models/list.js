@@ -52,7 +52,9 @@ export default {
 
         console.log('open url');
         const theirUrl = response.data.dockerURL;
-        window.open(theirUrl);
+        setTimeout(function(){
+          window.open(theirUrl);
+        }, 1800); 
       }
       
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
+import { Spin, List } from 'antd';
 import styles from './Tinylink.less';
 
 @connect(({ result }) => ({
@@ -52,12 +52,9 @@ class TinylinkPage extends React.Component {
         const { path , projectname } = this.state;
         console.log('==================render=====================');
         console.log(result);
-        const getRequest = () => {
-            return path
-          }
         const rurl = new String(result.hardwareConnectionImg);
         const imgurl = 'http://47.97.217.32/tinylink/'+rurl.substring(3);
-        const getRunstate = () => {
+        const getResult = () => {
             let res = "";
             if(result.systemState == "1") {
                 res = 'Success';
@@ -66,30 +63,52 @@ class TinylinkPage extends React.Component {
             {
                 res = 'Failed';
             }
-            return res;
-        }
+            
+            if(result.status == 'ok') {
+                return(
+                <div>
+                    <h2>文件路径: {path}</h2>
+                    <h2>projectname: {projectname}</h2>
+                    <List>
+                        <List.Item>
+                            <List.Item.Meta
+                            title= '运行结果'
+                            description={res}
+                            />
+                        </List.Item>
+                        <List.Item>
+                            <List.Item.Meta
+                            title= '功能列表'
+                            description={result.functionList}
+                            />
+                        </List.Item>
+                        <List.Item
+                         extra={<img width={870} alt="hardwareimg" src={imgurl} />}
+                        >
+                            <List.Item.Meta
+                            title= '硬件连接图'
+                            />
+                        </List.Item>
+                        <List.Item>
+                            <List.Item.Meta
+                            title= '编译结果'
+                            description={result.compileDebug} 
+                            />
+                        </List.Item>
+                    </List>
+                </div>);
+                }
+                else
+                {
+                    return(<Spin size='large' />);
+                }
+            }
+    
         console.log(imgurl);
         return (
             <div className="tiny-body">
-                <h2>文件路径: {getRequest()}</h2>
-                <h2>projectname: {projectname}</h2>
-
-                <h2>运行结果</h2>
-                    <div>
-                        {getRunstate()}<br />
-                    </div>
-                <h2>功能列表</h2>
-                <div>
-                    {result.functionList}
-                </div>
-                <h2>硬件连接图</h2>
-                <div>
-                    <img className={styles.hardwareImg} src={imgurl} />
-                </div>
-                <h2>编译结果</h2>
-                <div>
-                    {result.compileDebug}   
-                </div>
+                {getResult()}
+               
             </div>
         )
     };
