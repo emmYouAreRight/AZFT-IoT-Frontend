@@ -184,19 +184,10 @@ class Register extends Component {
     return (
       <div className={styles.main}>
         <h3>
-          <FormattedMessage id="app.register.register" />
+          <FormattedMessage id="app.register.register" /> <br />
+          账户信息
         </h3>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem>
-            {getFieldDecorator('full_name', {
-              rules: [{
-                required: true, 
-                message: formatMessage({ id: 'validation.full_name.required' }),
-              }],
-            })(
-              <Input size='large' placeholder={formatMessage({ id: 'form.full_name.placeholder' })}/>
-            )}
-          </FormItem>
           <FormItem>
             {getFieldDecorator('username', {
               rules: [{
@@ -258,6 +249,20 @@ class Register extends Component {
                 />
               )}
             </FormItem>
+            <h3>
+              个人信息 <br />
+            </h3>
+            <FormItem>
+            {getFieldDecorator('full_name', {
+              rules: [{
+                required: true, 
+                message: formatMessage({ id: 'validation.full_name.required' }),
+              }],
+            })(
+              <Input size='large' placeholder={formatMessage({ id: 'form.full_name.placeholder' })}/>
+            )}
+          </FormItem>
+          
 
           <FormItem>
             {getFieldDecorator('birthday', {

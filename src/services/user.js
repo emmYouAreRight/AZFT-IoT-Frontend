@@ -5,7 +5,7 @@ export async function query() {
 }
 
 export async function queryCurrent() {
-  console.log(localStorage);
+  console.log(sessionStorage);
   
 }
 

@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'dva';
-import { Spin, List } from 'antd';
+import { Spin, List, Card, Button } from 'antd';
+import Result from '@/components/Result';
 import styles from './Tinylink.less';
 
-@connect(({ result }) => ({
+@connect(({ result, loading }) => ({
     result,
+    loading : loading.models.result
   }))
 
+
+  
 class TinylinkPage extends React.Component {
     state = {
         path: "",
         projectname: ""
       }
 
-
+    handleBack = () => {
+        window.close();
+    }
     componentDidMount() {
         const { path, projectname } = this.state;
         const { dispatch } = this.props;
@@ -43,43 +49,47 @@ class TinylinkPage extends React.Component {
         });
       };
      
-
+      
     render() {
         
         const {
-            result: {result}
+            result: {result},
+            loading
         } = this.props;
         const { path , projectname } = this.state;
         console.log('==================render=====================');
         console.log(result);
+        
         const rurl = new String(result.hardwareConnectionImg);
         const imgurl = 'http://47.97.217.32/tinylink/'+rurl.substring(3);
+        const getfunctionList =() => {
+            let strs = new Array();
+            strs = String(result.functionList).split('\r\n');
+            const funcstr = strs.map((item) => <li>{item}</li>);
+            return (<ol>{funcstr}</ol>);
+        } 
+        
+        const getcompileDebug =() => {
+            let strs = new Array();
+            strs = String(result.compileDebug).split('\n');
+            const compstr = strs.map((item) => <li>{item}</li>);
+            return (<ol>{compstr}</ol>);
+        }
         const getResult = () => {
-            let res = "";
+            let res = '';
+            let title, info, resextra, actions;
+
             if(result.systemState == "1") {
-                res = 'Success';
-            }
-            else
-            {
-                res = 'Failed';
-            }
-            
-            if(result.status == 'ok') {
-                return(
-                <div>
-                    <h2>文件路径: {path}</h2>
-                    <h2>projectname: {projectname}</h2>
-                    <List>
-                        <List.Item>
-                            <List.Item.Meta
-                            title= '运行结果'
-                            description={res}
-                            />
-                        </List.Item>
+                res = 'success';
+                title = '编译成功';
+                info = '请按照硬件连接图进行组装硬件，确认连接正确后一键烧写';
+                resextra = (
+                    <Fragment>
+                        <List>
                         <List.Item>
                             <List.Item.Meta
                             title= '功能列表'
-                            description={result.functionList}
+                            description={getfunctionList()}
                             />
                         </List.Item>
                         <List.Item
@@ -92,24 +102,59 @@ class TinylinkPage extends React.Component {
                         <List.Item>
                             <List.Item.Meta
                             title= '编译结果'
-                            description={result.compileDebug} 
+                            description={getcompileDebug()} 
+                            
                             />
                         </List.Item>
-                    </List>
-                </div>);
-                }
-                else
-                {
-                    return(<Spin size='large' />);
-                }
+                        </List>
+                    </Fragment>)
+                actions = (
+                    <Fragment>
+                      <Button type="primary">
+                        一键烧写
+                      </Button>
+                    </Fragment>
+                  );
+                
             }
-    
+            else
+            {
+                res = 'error';
+                title = '编译失败';
+                info = '请修改代码后重新编译';
+                resextra = (
+                    <Fragment>
+
+                    </Fragment>
+                )
+
+                actions = (
+                    <Fragment>
+                        <Button type="primary" onClick={this.handleBack}>
+                        返回修改
+                        </Button>
+                    </Fragment>
+                )
+
+            }
+            return (
+                <Result 
+                    type= {res}
+                    title={title}
+                    description={info}
+                    extra={resextra}
+                    actions={actions}
+                    style={{ marginTop: 48, marginBottom: 16 }}
+                />
+                
+            )       
+        }
+        
         console.log(imgurl);
         return (
-            <div className="tiny-body">
-                {getResult()}
-               
-            </div>
+        <Card bordered={false} loading={loading}>
+            {getResult()}
+        </Card>
         )
     };
 

@@ -13,9 +13,10 @@ export default {
     *submit({ payload }, { call, put }) {
       const response = yield call(userRegister, payload);
       yield put({
-        type: 'registerHandle',
-        payload: response,
+          type: 'registerHandle',
+          payload: response,
       });
+      
     },
   },
 

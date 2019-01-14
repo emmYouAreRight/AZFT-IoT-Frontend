@@ -15,17 +15,24 @@ function checkStatus(response) {
     }
     else
     {
+      console.log('============error================')
+      console.log(response);
       const error = new Error(response.statusText);
-      error.response = response;
-      notification.error({
-        message: `请求错误: ${url}`,
-        description: error.message,
-      });
+      
+      error.response = result;
+      console.log(error.response);
+      error.message = result.message;
+      console.log(error.message);
+      throw error
     }   
   }
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
+  else
+  {
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
+  
 }
 
 axios.defaults.baseURL = 'http://api.daixinye.com';
@@ -59,6 +66,8 @@ export default function request(url, options) {
   })
     .then(checkStatus)
     .catch((error) => {
+      console.log('====================catch error======================');
+      console.log(error.message);
       if (error.code) {
         notification.error({
           message: error.name,
@@ -74,6 +83,7 @@ export default function request(url, options) {
             description: '很抱歉您的请求已经超时了，请稍后再试！',
           });
         } else {
+
           notification.error({
             message: `请求错误: ${url}`,
             description: error.message,

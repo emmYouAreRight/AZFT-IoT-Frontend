@@ -7,7 +7,7 @@ describe('Login', () => {
 
   beforeEach(async () => {
     await page.goto(`${BASE_URL}/user/login`, { waitUntil: 'networkidle2' });
-    await page.evaluate(() => window.localStorage.setItem('webide-authority', 'guest'));
+    await page.evaluate(() => sessionStorage.setItem('webide-authority', 'guest'));
   });
 
   it('should login with failure', async () => {

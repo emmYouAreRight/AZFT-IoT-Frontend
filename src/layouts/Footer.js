@@ -22,7 +22,7 @@ const FooterView = () => (
         {
           key: 'OneLink',
           title: 'OneLink',
-          href: '',
+          href: 'http://ol.tinylink.cn/onelink/',
           blankTarget: true,
         },
       ]}
