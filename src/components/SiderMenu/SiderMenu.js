@@ -66,10 +66,8 @@ export default class SiderMenu extends PureComponent {
         className={siderClassName}
       >
         <div className={styles.logo} id="logo">
-          <Link to="/">
             <img src={logo} alt="logo" />
             <h1>Web IDE</h1>
-          </Link>
         </div>
         <Suspense fallback={<PageLoading />}>
           <BaseMenu

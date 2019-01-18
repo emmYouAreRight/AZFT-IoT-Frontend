@@ -124,7 +124,15 @@ class TinylinkPage extends React.Component {
                 info = '请修改代码后重新编译';
                 resextra = (
                     <Fragment>
+                        <List>
+                            <List.Item>
+                            <List.Item.Meta
+                                title= '详细信息'
+                                description={result.verbose} 
 
+                            />
+                            </List.Item>
+                        </List>
                     </Fragment>
                 )
 

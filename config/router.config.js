@@ -1,11 +1,39 @@
 export default [
   {
-    path:'/webview',
+    path: '/webview',
+    component: '../layouts/webviewLayout',
     routes: [
-      {path: '/webview', redirect: '/webview/tinylink' },
-      {path: '/webview/tinylink', component: './Webview/Tinylink'},
+      { path: '/webview', redirect: '/webview/tinylink/localcompile' },
+      {
+        path: '/webview/tinylink',
+        icon: 'dashboard',
+        name: 'tinylink',
+        routes: [
+          {
+            path: '/webview/tinylink/localcompile',
+            name: 'localcomp',
+            component: './TinyLink/localcompile',
+          },
+          {
+            path: '/webview/tinylink/udccompile',
+            name: 'udccomp',
+            component: './TinyLink/udccompile',
+          },
+        ],
+      },
+      {
+        path: '/webview/tinysim',
+        icon: 'dashboard',
+        name: 'tinysim',
+        component: './TinySim/tinysim',
+      },
+      {
+        path: '/webview/onelink',
+        icon: 'dashboard',
+        name: 'onelink',
+        component: './OneLink/onelink',
+      },
     ],
-
   },
   // user
   {
