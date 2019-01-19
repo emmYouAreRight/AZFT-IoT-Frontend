@@ -33,6 +33,12 @@ export default [
         name: 'onelink',
         component: './OneLink/onelink',
       },
+      {
+        path: '/webview/debug',
+        icon: 'dashboard',
+        name: 'debug',
+        component: './webview/debug',
+      },
     ],
   },
   // user
@@ -67,7 +73,7 @@ export default [
           },
         ],
       },
-      
+
       {
         component: '404',
       },
