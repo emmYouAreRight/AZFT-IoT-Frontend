@@ -1,57 +1,53 @@
 import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
+import Result from '@/components/Result';
 import { connect } from 'dva';
-import {
-  Button,
-  Menu,
-  Dropdown,
-  Icon,
-  Row,
-  Col,
-  Steps,
-  Card,
-  Popover,
-  Badge,
-  Table,
-  Tooltip,
-  Divider,
-} from 'antd';
-import classNames from 'classnames';
-import DescriptionList from '@/components/DescriptionList';
+import { Spin, Button, Steps, Card, List, Collapse } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './onelink.less';
 
 const { Step } = Steps;
-const { Description } = DescriptionList;
-const ButtonGroup = Button.Group;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
-const udccompstep = [
-    {
-        title: '选择文件',
-        content: <div>onelink</div>
+
+function onSelectFile() {
+  const messageData = {
+    from: 'iframe',
+    data: {
+      command: 'onmessage',
+      data: {
+        type: 'command',
+        content: 'open_file_picker',
+      },
     },
-    {
-        title: '编译结果',
-        content: ''
-    },
-    {
-        title: '烧录',
-        content: ''
-    },
-]
-class OnelinkPage extends Component {
+  };
+  window.parent.postMessage(messageData, '*');
+}
+
+@connect(({ onelink, loading }) => ({
+  result: onelink.result,
+  loading: loading.models.result,
+
+}))
+class onelinkPage extends Component {
   state = {
     stepDirection: 'horizontal',
     current: 0,
+    filepath: '/home/project/Case3.cpp',
+    proname: 'mytest',
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-
     this.setStepDirection();
     window.addEventListener('resize', this.setStepDirection, { passive: true });
+    // 获取参数
+    // window.addEventListener('message', e => {
+    //   const { path } = e.data.data;
+    //   this.setState({
+    //     filepath: path,
+    //   });
+    // });
   }
 
   componentWillUnmount() {
@@ -62,9 +58,7 @@ class OnelinkPage extends Component {
   @Bind()
   @Debounce(200)
   setStepDirection() {
-    const { 
-        stepDirection,
-     } = this.state;
+    const { stepDirection } = this.state;
     const w = getWindowWidth();
     if (stepDirection !== 'vertical' && w <= 576) {
       this.setState({
@@ -76,54 +70,146 @@ class OnelinkPage extends Component {
       });
     }
   }
+
   next() {
-    const current = this.state.current + 1;
-    this.setState({ current });
+    const { dispatch } = this.props;
+
+    const { current, filepath, proname } = this.state;
+    const next = current + 1;
+    switch (next) {
+      // 第二步
+      case 1:
+        dispatch({
+          type: 'onelink/compile',
+          payload: {
+            filepath,
+            proname,
+          },
+        });
+        break;
+      default:
+    }
+    this.setState({ current: next });
   }
+
   prev() {
-    const current = this.state.current - 1;
-    this.setState({ current });
+    const { current } = this.state;
+    const prev = current - 1;
+    this.setState({ current: prev });
   }
+
   render() {
-    const { stepDirection, current } = this.state;
-    const { loading } = this.props;
-    
+    const { stepDirection, current, filepath } = this.state;
+    const {
+      result,
+      loading,
+    } = this.props;
+
+    // const rurl = `${result.hardwareConnectionImg}`;
+    // const imgurl = `http://47.97.217.32/tinylink/${rurl.substring(3)}`;
+    // const getfunctionList = () => {
+    //   let strs = [];
+    //   strs = String(result.functionList).split('\r\n');
+    //   const funcstr = strs.map(item => <li>{item}</li>);
+    //   return <ol>{funcstr}</ol>;
+    // };
+
+    const getcompileDebug = () => {
+      let strs = [];
+      strs = String(result.verbose).split('<br>');
+      const compstr = strs.map(item => <li>{item}</li>);
+      return result.verbose? (<ol>{compstr}</ol>) : (<div><Spin /></div>);
+    };
+    const getResult = () => {
+      let res = '';
+      let title;
+      let info;
+      let resextra;
+      let actions;
+
+      if (result.systemState == '1') {
+        res = 'success';
+        title = '编译成功';
+        info = '请按照硬件连接图进行组装硬件，确认连接正确后一键烧写';
+      } 
+      else if(result.systemState == '0') {
+        res = 'error';
+        title = '编译失败';
+        info = '请修改代码后重新编译';
+      }
+      
+      return (
+        <Result
+          type={res}
+          title={title}
+          description={info}
+          extra={getcompileDebug()}
+          actions={actions}
+          style={{ marginTop: 48, marginBottom: 16 }}
+        />
+      );
+    };
+
+    const onelinkstep = [
+      {
+        title: '选择文件',
+        content: (
+          <div>
+            <Button onClick={onSelectFile}>选择文件</Button>
+            <p>{filepath}</p>
+          </div>
+        ),
+      },
+      {
+        title: '编译',
+        content: (
+          <div>
+            <Card bordered={false} loading={loading}>
+              {getResult()}
+            </Card>
+          </div>
+        ),
+      },
+      {
+        title: '设备端信息',
+        content: (
+          <div>
+            
+          </div>
+        ),
+      },
+    ];
+
     return (
       <PageHeaderWrapper>
         <Card title="流程" style={{ marginBottom: 24 }} bordered={false}>
-          <Steps direction={stepDirection}  current={current}>
-                {udccompstep.map(item => <Step key={item.title} title={item.title} />)}
+          <Steps direction={stepDirection} current={current}>
+            {onelinkstep.map(item => (
+              <Step key={item.title} title={item.title} />
+            ))}
           </Steps>
         </Card>
-        <Card title={udccompstep[current].title} style={{ marginBottom: 24 }} bordered={false}>
-        <div>
-          <div className={styles.stepsContent}>
-              {udccompstep[current].content}
+        <Card loading={loading} title={onelinkstep[current].title} style={{ marginBottom: 24 }} bordered={false}>
+          <div>
+            <div className={styles.stepsContent}>{onelinkstep[current].content}</div>
+            <div className={styles.stepsAction}>
+              {current < onelinkstep.length - 1 && (
+                <Button type="primary" onClick={() => this.next()}>
+                  下一步
+                </Button>
+              )}
+              {current === onelinkstep.length - 1 && <Button type="primary">Done</Button>}
+              {current > 0 && (
+                <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+                  上一步
+                </Button>
+              )}
+            </div>
           </div>
-          <div className={styles.stepsAction}>
-          {
-            this.state.current < udccompstep.length - 1
-            &&
-            <Button type="primary" onClick={() => this.next()}>Next</Button>
-          }
-          {
-            this.state.current === udccompstep.length - 1
-            &&
-            <Button type="primary" >Done</Button>
-          }
-          {
-            this.state.current > 0
-            &&
-            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-              Previous
-            </Button>
-          }
-        </div>
-        </div>
-        </Card> 
-        </PageHeaderWrapper>
+        </Card>
+      </PageHeaderWrapper>
     );
   }
 }
 
-export default OnelinkPage;
+export default onelinkPage;

@@ -9,7 +9,6 @@ function checkStatus(response) {
     
     if(result.code == 0)
     {
-      console.log('=======requet函数调用ok========');
       result.status = 'ok'; //eslint-disable-line
       return result;
     }
@@ -61,7 +60,7 @@ export default function request(url, options) {
   return axios.create().request({
     url,
     method: options && options.method ? options.method : 'get',
-    timeout: 15000, //http请求超时时间
+    timeout: 20000, //http请求超时时间
     ...newOptions,
   })
     .then(checkStatus)
