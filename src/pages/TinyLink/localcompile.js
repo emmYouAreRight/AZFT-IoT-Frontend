@@ -47,6 +47,19 @@ class Localcomp extends Component {
         filepath: path,
       });
     });
+
+    const params = {};
+    window.location.search
+      .slice(1)
+      .split('&')
+      .forEach(value => {
+        const [k, v] = value.split('=');
+        params[k] = v;
+      });
+    const { projectname } = params;
+    this.setState({
+      proname: projectname,
+    });
   }
 
   componentWillUnmount() {
@@ -98,7 +111,7 @@ class Localcomp extends Component {
   }
 
   render() {
-    const { stepDirection, current, filepath } = this.state;
+    const { stepDirection, current, filepath, proname } = this.state;
     const {
       result: { result },
       loading,
@@ -203,7 +216,7 @@ class Localcomp extends Component {
 
     return (
       <PageHeaderWrapper>
-        <Card title="流程" style={{ marginBottom: 24 }} bordered={false}>
+        <Card title={`项目名称：${proname}`} style={{ marginBottom: 24 }} bordered={false}>
           <Steps direction={stepDirection} current={current}>
             {localcompstep.map(item => (
               <Step key={item.title} title={item.title} />
