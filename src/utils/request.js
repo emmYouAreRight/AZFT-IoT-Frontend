@@ -60,7 +60,7 @@ export default function request(url, options) {
   return axios.create().request({
     url,
     method: options && options.method ? options.method : 'get',
-    timeout: 20000, //http请求超时时间
+    timeout: 30000, //http请求超时时间
     ...newOptions,
   })
     .then(checkStatus)

@@ -8,6 +8,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './onelink.less';
 
 const { Step } = Steps;
+const Panel = Collapse.Panel;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
@@ -27,6 +28,7 @@ function onSelectFile() {
 
 @connect(({ onelink, loading }) => ({
   result: onelink.result,
+  device: onelink.device,
   loading: loading.models.result,
 
 }))
@@ -87,6 +89,16 @@ class onelinkPage extends Component {
           },
         });
         break;
+        case 2:
+        console.log('======dispatch======');
+        dispatch({
+          type: 'onelink/proInfo',
+          payload: {
+            ftype: 'fetchDeviceInProject',
+            proname,
+          },
+        });
+        break;
       default:
     }
     this.setState({ current: next });
@@ -102,6 +114,7 @@ class onelinkPage extends Component {
     const { stepDirection, current, filepath } = this.state;
     const {
       result,
+      device,
       loading,
     } = this.props;
 
@@ -113,7 +126,32 @@ class onelinkPage extends Component {
     //   const funcstr = strs.map(item => <li>{item}</li>);
     //   return <ol>{funcstr}</ol>;
     // };
+    const devInfo = () => {
+      
+      const devicelist = Object.keys(device).map(item => {
+        const devitem = device[item].map(value => (
+          <div>
+            <span>{value}</span>
+            <Button>Info</Button>
+            <Button>Burn</Button>
+          </div>
+        ))
+        return (<List.Item>
+          <List.Item.Meta
+            title = {
+            <div>
+              <span>{item}</span>
+              <Button>Info</Button>
+            </div>}
+            description = {devitem}
+          >
+          </List.Item.Meta>
+        </List.Item>)
+      });
 
+      return (<List>{devicelist}</List>)
+
+    };
     const getcompileDebug = () => {
       let strs = [];
       strs = String(result.verbose).split('<br>');
@@ -174,7 +212,7 @@ class onelinkPage extends Component {
         title: '设备端信息',
         content: (
           <div>
-            
+            {devInfo()}
           </div>
         ),
       },

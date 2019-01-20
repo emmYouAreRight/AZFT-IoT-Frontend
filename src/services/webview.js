@@ -72,8 +72,8 @@ export async function tinylink(params) {
     console.log('=============service调用onelinkProInfo================');
     console.log(params);
     const bodyForm = new FormData();
-    bodyForm.set('type', params.type);
-    bodyForm.set('project', params.proname);
+    bodyForm.set('type', params.ftype);
+    bodyForm.set('projectName', params.proname);
   
     return request('/onelink/project/info', {
       method: 'POST',

@@ -9,6 +9,7 @@ export default {
 
   state: {
     result: {},
+    device: {},
   },
 
   effects: {
@@ -48,23 +49,23 @@ export default {
             },
           });
       }
-     // const res = yield call(test);
-
-    //   const res = yield call(onelinkProList);
-    //   console.log(res);
-    //   const response = yield call(onelink, payload);
-    //   if(response.status == 'ok')
-    //   {
-    //       const ret = JSON.parse(response.data);
-    //         console.log(ret);
-    //     yield put({
-    //         type: 'compinfo',
-    //         payload: {
-    //           ...ret,
-    //         },
-    //       });
-    //   }
     },
+    *proInfo({ payload }, { call, put }) {
+      console.log('================proInfo======================');
+      console.log(payload);
+      const response = yield call(onelinkProInfo, payload);
+      console.log(response);
+      if(response.status == 'ok') {
+        const res = JSON.parse(response.data).deviceList;
+        console.log(res);
+        yield put({
+            type: 'saveDevice',
+            payload: {
+              res,
+            },
+          });
+      }
+    }
 
   },
 
@@ -78,5 +79,13 @@ export default {
         result: action.payload,
       };
     },
+    saveDevice(state, action) {
+      console.log('============saveDevice==============');
+      console.log(action.payload);
+      return {
+        ...state,
+        device: action.payload.res,
+      };
+    }
   },
 };
