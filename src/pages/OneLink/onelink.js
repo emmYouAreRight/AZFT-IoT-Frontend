@@ -2,14 +2,15 @@ import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import Result from '@/components/Result';
+import { getUserInfo } from '@/utils/userInfo'
 import { connect } from 'dva';
-import { Spin, Button, Steps, Card, Row, Col,List, Collapse, Drawer, Modal } from 'antd';
+import { Spin, Button, Steps, Card, Row, Col,List, Collapse, Drawer, Modal, Divider} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './onelink.less';
 
 const { Step } = Steps;
 const Panel = Collapse.Panel;
-
+const { Meta } = Card;
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
 function onSelectFile() {
@@ -30,6 +31,7 @@ function onSelectFile() {
   result: onelink.result,
   proCompres: onelink.proCompres, //设备端project编译结果
   device: onelink.device,
+  devDetailInfo: onelink.devDetailInfo,
   loading: loading.models.result,
 
 }))
@@ -40,6 +42,8 @@ class onelinkPage extends Component {
     filepath: '/home/project/Case3.cpp',
     proname: 'mytest',
     Drawervis: false,
+    Modalvis: false,
+    curInstance: "",
   };
 
   onDrawerClose = () => {
@@ -47,7 +51,11 @@ class onelinkPage extends Component {
       Drawervis: false,
     });
   };
-
+  onModalClose = () => {
+    this.setState({
+      Modalvis: false,
+    });
+  };
   componentDidMount() {
     this.setStepDirection();
     window.addEventListener('resize', this.setStepDirection, { passive: true });
@@ -138,15 +146,37 @@ class onelinkPage extends Component {
     e.stopImmediatePropagation();
   }
 
+  handleDevInfo = (e,item) => {
+    const { dispatch } = this.props;
+    const { proname } = this.state;
+    console.log(e);
+    console.log(item);
+    dispatch({
+      type: 'onelink/devDetailInfo',
+      payload: {
+        instance: item,
+        proname,
+      },
+    });
+    console.log('==========dispatch之后的devInfo================');
+    this.setState({
+      Modalvis: true,
+    });
+    this.setState({
+      curInstance: item,
+    });
+    
+  }
   render() {
-    const { stepDirection, current, filepath } = this.state;
+    const { stepDirection, current, filepath, curInstance } = this.state;
     const {
       result,
       device,
       loading,
       proCompres,
+      devDetailInfo,
     } = this.props;
-
+    let user = getUserInfo();
     const getImg = () => {
       const rurl = `${proCompres.imgpath}`;
       const imgurl = `http://ol.tinylink.cn/onelink/${rurl.substring(3)}`;
@@ -159,7 +189,6 @@ class onelinkPage extends Component {
       const procompstr = strs.map((item,index) => <li key={index}>{item}</li>);
       return <ol>{procompstr}</ol>;
     };
-
     //获取设备端信息
     const devInfo = () => {  
       const devicelist = Object.keys(device).map(item => {
@@ -177,7 +206,12 @@ class onelinkPage extends Component {
           dataSource = {device[item]}
           renderItem = {value => (
           <List.Item 
-          actions={[<a>详细信息</a>, <a>一键烧写</a>]}
+          actions={[<a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>,<a>一键烧写</a>]}
+          // (<span>
+          //   <a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>
+          //   <Divider type="vertical" />
+          //   <a>一键烧写</a>
+          // </span>)}
           >
           <div>{value}</div>
           </List.Item>)}
@@ -287,7 +321,6 @@ class onelinkPage extends Component {
         <Drawer
          width={680}
          placement="right"
-         //closable={false}
          onClose={this.onDrawerClose}
          visible={this.state.Drawervis}
         >
@@ -300,6 +333,36 @@ class onelinkPage extends Component {
               </List.Item>
           </List>
         </Drawer>
+        <Modal
+        width = {700}
+        visible = {this.state.Modalvis}
+        title = {curInstance}
+        onCancel = {this.onModalClose}
+        footer={[
+          <Button key="back" onClick={this.onModalClose}>知道了</Button>]}
+        >
+          <Card
+          >
+          <Meta
+            title = 'Mqtt Information'
+            description = {
+              <ol>
+                <li>{`Data Topic:${devDetailInfo.hash_id}/data`}</li>
+                <li>{`Event Topic:${devDetailInfo.hash_id}/data`}</li>
+                <li>{`Service Topic:${devDetailInfo.hash_id}/service`}</li>
+                <li>{`Username:${user}`}</li>
+                <li>{`Service Name:tinylink.cn`}</li>
+                <li>{`Client Name:${devDetailInfo.hash_id}`}</li>
+                <li>{`Password:user password`}</li>
+              </ol>
+              }
+          />    
+          <Meta
+            title = '下载tinylink源代码'
+            description = {<Button>下载</Button>} 
+          />
+          </Card>
+        </Modal>
       </PageHeaderWrapper>
     );
   }

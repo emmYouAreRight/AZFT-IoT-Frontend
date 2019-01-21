@@ -99,8 +99,7 @@ export async function tinylink(params) {
     console.log('=============service调用onelinkDevInfo================');
     console.log(params);
     const bodyForm = new FormData();
-    bodyForm.set('type', params.type);
-    bodyForm.set('project', params.proname);
+    bodyForm.set('projectName', params.proname);
     bodyForm.set('instance', params.instance);
   
     return request('/onelink/project/device/info', {

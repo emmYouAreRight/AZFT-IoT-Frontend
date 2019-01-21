@@ -11,6 +11,7 @@ export default {
     result: {},
     device: {},
     proCompres: {},
+    devDetailInfo: {},
   },
 
   effects: {
@@ -76,13 +77,29 @@ export default {
         const res = JSON.parse(response.data);
         console.log(res);
         yield put({
-            type: 'svaeProComp',
+            type: 'saveProComp',
             payload: {
               ...res,
             },
           });
-      }
-    }
+      };
+    },
+    *devDetailInfo({ payload }, { call, put }) {
+      console.log('================devDetailInfo======================');
+      console.log(payload);
+      const response = yield call(onelinkDevInfo, payload);
+      console.log(response);
+      if(response.status == 'ok') {
+        const res = JSON.parse(response.data);
+        console.log(res);
+        yield put({
+            type: 'saveDevInfo',
+            payload: {
+              ...res,
+            },
+          });
+      };
+    },
 
   },
 
@@ -104,12 +121,20 @@ export default {
         device: action.payload.res,
       };
     },
-    svaeProComp(state, action) {
-      console.log('============svaeProComp==============');
+    saveProComp(state, action) {
+      console.log('============saveProComp==============');
       console.log(action.payload);
       return {
         ...state,
         proCompres: action.payload,
+      };
+    },
+    saveDevInfo(state, action) {
+      console.log('============saveDevInfo==============');
+      console.log(action.payload);
+      return {
+        ...state,
+        devDetailInfo: action.payload,
       };
     },
   },
