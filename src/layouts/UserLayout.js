@@ -27,7 +27,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Web IDE Copyright <Icon type="copyright" /> EmYouAreRight
+    Web IDE Copyright <Icon type="copyright" /> AZFT EmmYouAreRight
   </Fragment>
 );
 
@@ -59,7 +59,7 @@ class UserLayout extends React.PureComponent {
                 <span className={styles.title}>Web IDE</span>
               </Link>
             </div>
-            
+
           </div>
           {children}
         </div>
