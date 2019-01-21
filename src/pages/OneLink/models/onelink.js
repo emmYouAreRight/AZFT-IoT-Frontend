@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { onelink, onelinkProInfo, onelinkDevInfo, onelinkCppDownload, onelinkProList} from '@/services/webview';
+import { onelink, onelinkProInfo, onelinkDevInfo, onelinkProComp, onelinkCppDownload, onelinkProList} from '@/services/webview';
 import { ok } from 'assert';
 
 
@@ -10,6 +10,7 @@ export default {
   state: {
     result: {},
     device: {},
+    proCompres: {},
   },
 
   effects: {
@@ -65,6 +66,22 @@ export default {
             },
           });
       }
+    },
+    *proCompile({ payload }, { call, put }) {
+      console.log('================proCompile======================');
+      console.log(payload);
+      const response = yield call(onelinkProComp, payload);
+      console.log(response);
+      if(response.status == 'ok') {
+        const res = JSON.parse(response.data);
+        console.log(res);
+        yield put({
+            type: 'svaeProComp',
+            payload: {
+              ...res,
+            },
+          });
+      }
     }
 
   },
@@ -86,6 +103,14 @@ export default {
         ...state,
         device: action.payload.res,
       };
-    }
+    },
+    svaeProComp(state, action) {
+      console.log('============svaeProComp==============');
+      console.log(action.payload);
+      return {
+        ...state,
+        proCompres: action.payload,
+      };
+    },
   },
 };

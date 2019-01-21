@@ -3,7 +3,7 @@ import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import Result from '@/components/Result';
 import { connect } from 'dva';
-import { Spin, Button, Steps, Card, Row, Col,List, Collapse } from 'antd';
+import { Spin, Button, Steps, Card, Row, Col,List, Collapse, Drawer, Modal } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './onelink.less';
 
@@ -28,6 +28,7 @@ function onSelectFile() {
 
 @connect(({ onelink, loading }) => ({
   result: onelink.result,
+  proCompres: onelink.proCompres, //设备端project编译结果
   device: onelink.device,
   loading: loading.models.result,
 
@@ -38,6 +39,13 @@ class onelinkPage extends Component {
     current: 0,
     filepath: '/home/project/Case3.cpp',
     proname: 'mytest',
+    Drawervis: false,
+  };
+
+  onDrawerClose = () => {
+    this.setState({
+      Drawervis: false,
+    });
   };
 
   componentDidMount() {
@@ -110,29 +118,57 @@ class onelinkPage extends Component {
     this.setState({ current: prev });
   }
 
+  handleProCompile = (e,item) => {
+    const { dispatch } = this.props;
+    const { proname } = this.state;
+    console.log(item);
+    dispatch({
+      type: 'onelink/proCompile',
+      payload: {
+        appName: item,
+        proname,
+      },
+    });
+    this.setState({
+      Drawervis: true,
+    });
+    console.log('=========event事件==========');
+    console.log(e);
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+  }
+
   render() {
     const { stepDirection, current, filepath } = this.state;
     const {
       result,
       device,
       loading,
+      proCompres,
     } = this.props;
 
-    // const rurl = `${result.hardwareConnectionImg}`;
-    // const imgurl = `http://47.97.217.32/tinylink/${rurl.substring(3)}`;
-    // const getfunctionList = () => {
-    //   let strs = [];
-    //   strs = String(result.functionList).split('\r\n');
-    //   const funcstr = strs.map(item => <li>{item}</li>);
-    //   return <ol>{funcstr}</ol>;
-    // };
+    const getImg = () => {
+      const rurl = `${proCompres.imgpath}`;
+      const imgurl = `http://ol.tinylink.cn/onelink/${rurl.substring(3)}`;
+      return imgurl;
+    }
+     //获取设备端tinylink编译信息
+    const getProCompInfo = () => {
+      let strs = [];
+      strs = String(proCompres.compile).split('\n');
+      const procompstr = strs.map((item,index) => <li key={index}>{item}</li>);
+      return <ol>{procompstr}</ol>;
+    };
 
+    //获取设备端信息
     const devInfo = () => {  
       const devicelist = Object.keys(device).map(item => {
         const headDetail = (
           <Row >
             <Col xl={12} lg={12}>{item}</Col>
-            <Col xl={12} lg={12}><Button>编译信息</Button></Col>
+            <Col xl={12} lg={12}>
+            <Button type="primary" onClick={this.handleProCompile.bind(this, event,item)}>编译信息</Button>
+            </Col>
           </Row>
         )
         const devitem = (
@@ -154,10 +190,11 @@ class onelinkPage extends Component {
       return (<Collapse>{devicelist}</Collapse>)
 
     };
+    //获取onelink编译信息
     const getcompileDebug = () => {
       let strs = [];
       strs = String(result.verbose).split('<br>');
-      const compstr = strs.map(item => <li>{item}</li>);
+      const compstr = strs.map((item,index) => <li key={index}>{item}</li>);
       return result.verbose? (<ol>{compstr}</ol>) : (<div><Spin /></div>);
     };
     const getResult = () => {
@@ -247,6 +284,22 @@ class onelinkPage extends Component {
             </div>
           </div>
         </Card>
+        <Drawer
+         width={680}
+         placement="right"
+         //closable={false}
+         onClose={this.onDrawerClose}
+         visible={this.state.Drawervis}
+        >
+          <List>
+              <List.Item extra={<img width={600} alt="hardwareimg" src={getImg()} />}>
+                <List.Item.Meta title="硬件连接图" />
+              </List.Item>
+              <List.Item>
+                <List.Item.Meta title="编译结果" description={getProCompInfo()} />
+              </List.Item>
+          </List>
+        </Drawer>
       </PageHeaderWrapper>
     );
   }

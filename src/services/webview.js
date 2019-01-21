@@ -82,6 +82,18 @@ export async function tinylink(params) {
     })
   
   }
+  export async function onelinkProComp(params) {
+    console.log(params);
+    const bodyForm = new FormData();
+    bodyForm.set('appName', params.appName);
+    bodyForm.set('projectName', params.proname);
+   
+    return request('/onelink/project/compile/info', {
+      method: 'POST',
+      data: bodyForm,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  }
 
   export async function onelinkDevInfo(params) {
     console.log('=============service调用onelinkDevInfo================');
