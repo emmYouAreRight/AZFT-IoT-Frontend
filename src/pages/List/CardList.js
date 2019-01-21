@@ -1,20 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { findDOMNode } from 'react-dom';
-import { Card, Button, Icon, List,
-  Row,
-  Col,
-  Radio,
-  Input,
-  Progress,
-  Dropdown,
-  Menu,
-  Avatar,
-  Modal,
-  Form,
-  DatePicker,
-  Select
-} from 'antd';
+import { Card, Button, Icon, List, Input, Modal, Form } from 'antd';
 
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -22,10 +9,7 @@ import Result from '@/components/Result';
 import styles from './CardList.less';
 
 const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const SelectOption = Select.Option;
-const { Search, TextArea } = Input;
+const { TextArea } = Input;
 
 @connect(({ list, loading }) => ({
   list,
@@ -39,14 +23,14 @@ class CardList extends PureComponent {
     labelCol: { span: 7 },
     wrapperCol: { span: 13 },
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'list/fetch',
-      payload: {
-      },
+      payload: {},
     });
-  };
+  }
 
   showModal = () => {
     this.setState({
@@ -78,7 +62,6 @@ class CardList extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log(fieldsValue);
       this.setState({
         done: true,
       });
@@ -91,23 +74,19 @@ class CardList extends PureComponent {
 
   handleOpen = item => {
     const { dispatch } = this.props;
-    console.log(item);
     dispatch({
       type: 'list/openProject',
       payload: item,
     });
-
-  }
+  };
 
   handleDelete = item => {
     const { dispatch } = this.props;
-    console.log(item);
     dispatch({
       type: 'list/delete',
       payload: item,
     });
-
-  }
+  };
 
   deleteItem = id => {
     const { dispatch } = this.props;
@@ -116,7 +95,6 @@ class CardList extends PureComponent {
       payload: { id },
     });
   };
-
 
   render() {
     const {
@@ -128,16 +106,12 @@ class CardList extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
 
-    const { visible, done, current = {} } = this.state;
+    const { visible, done = {} } = this.state;
 
     const content = (
       <div className={styles.pageHeaderContent}>
-        <p>
-          Web IDE工作空间，使用Theia进行物联网应用开发，可以连接TinyLink，TinySim，OneLink，UDC
-        </p>
-        <div className={styles.contentLink}>
-          
-        </div>
+        <p>Web IDE工作空间，使用Theia进行物联网应用开发，可以连接TinyLink，TinySim，OneLink，UDC</p>
+        <div className={styles.contentLink} />
       </div>
     );
 
@@ -153,14 +127,6 @@ class CardList extends PureComponent {
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
       : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
-
-    const Info = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
-      </div>
-    );
 
     const getModalContent = () => {
       if (done) {
@@ -188,13 +154,10 @@ class CardList extends PureComponent {
           <FormItem label="应用名称" {...this.formLayout}>
             {getFieldDecorator('appName', {
               rules: [{ required: true, message: '请输入应用名称' }],
-            })(
-              <Input placeholder="请输入应用名称" />
-            )}
+            })(<Input placeholder="请输入应用名称" />)}
           </FormItem>
           <FormItem {...this.formLayout} label="项目描述">
-            {getFieldDecorator('description')
-            (<TextArea rows={4} placeholder="请输入项目描述" />)}
+            {getFieldDecorator('description')(<TextArea rows={4} placeholder="请输入项目描述" />)}
           </FormItem>
         </Form>
       );
@@ -211,16 +174,21 @@ class CardList extends PureComponent {
             renderItem={item =>
               item ? (
                 <List.Item key={item.id}>
-                  <Card hoverable className={styles.card} actions={[
-                  <a onClick={this.handleOpen.bind(this, item)}>开启</a>, 
-                  <a onClick={this.handleDelete.bind(this, item)}>删除</a>]
-                  }>
+                  <Card
+                    hoverable
+                    className={styles.card}
+                    actions={[
+                      <a onClick={this.handleOpen.bind(this, item)}>开启</a>,
+                      <a onClick={this.handleDelete.bind(this, item)}>删除</a>,
+                    ]}
+                  >
                     <Card.Meta
                       title={<a>{item.pname}</a>}
                       description={
                         <Ellipsis className={styles.item} lines={3}>
-                          {item.appName}<br />
-                          {item.description}
+                          {item.appName}
+                          <br />
+                          {item.description || '暂无描述'}
                         </Ellipsis>
                       }
                     />
@@ -228,15 +196,15 @@ class CardList extends PureComponent {
                 </List.Item>
               ) : (
                 <List.Item>
-                  <Button 
-                  type="dashed" 
-                  className={styles.newButton}
-                  onClick={this.showModal}
-                  ref={component => {
-                    /* eslint-disable */
-                    this.addBtn = findDOMNode(component);
-                    /* eslint-enable */
-                  }}
+                  <Button
+                    type="dashed"
+                    className={styles.newButton}
+                    onClick={this.showModal}
+                    ref={component => {
+                      /* eslint-disable */
+                      this.addBtn = findDOMNode(component);
+                      /* eslint-enable */
+                    }}
                   >
                     <Icon type="plus" /> 新增工作空间
                   </Button>
