@@ -1,4 +1,5 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
+import { getUserInfo } from '@/utils/userInfo';
 
 export default {
   namespace: 'user',
@@ -16,8 +17,10 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent(_, { put }) {
+      const response = getUserInfo();
+      console.log('===========fetchCurrent===================');
+      console.log(response);
       yield put({
         type: 'saveCurrentUser',
         payload: response,
@@ -36,7 +39,7 @@ export default {
       return {
         ...state,
         currentUser: {
-          name: 'Serati Ma',
+          name: action.payload,
           avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
           userid: '00000001',
         },

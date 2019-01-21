@@ -5,6 +5,7 @@ import { userLogin, userLogout } from '@/services/user';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
+import { setUserInfo } from '@/utils/userInfo'
 
 export default {
   namespace: 'login',
@@ -18,10 +19,11 @@ export default {
       console.log(payload);
       const response = yield call(userLogin, payload);
       if (response.status === 'ok') {
+        const res = response.data;
         yield put({
           type: 'changeLoginStatus',
           payload: {
-            response,
+            ...res,
             currentAuthority: 'admin'
           },
         });
@@ -73,6 +75,7 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
+      setUserInfo(payload.uid);
       setAuthority(payload.currentAuthority);
       return {
         ...state,
