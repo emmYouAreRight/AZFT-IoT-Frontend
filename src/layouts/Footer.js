@@ -28,7 +28,7 @@ const FooterView = () => (
       ]}
       copyright={
         <Fragment>
-          Web IDE Copyright <Icon type="copyright" /> EmYouAreRight
+          Web IDE Copyright <Icon type="copyright" /> AZFT EmmYouAreRight
         </Fragment>
       }
     />

@@ -25,8 +25,11 @@ class TinySimPage extends Component {
     filepath: '/home/project/LED_Blink.cpp',
     confpath: '/home/project/LED_config.json',
     proname: 'mytest',
+    historycmd: '',
+    logContent: [], // 应用日志输出信息
 
     filePickTarget: '', // 用于指定选择文件后赋值的变量名
+    curCmd: '', // 输入的命令
   };
 
   componentDidMount() {
@@ -43,28 +46,39 @@ class TinySimPage extends Component {
     });
     // 连接websocket
     const ws = new WebSocket('ws://47.92.240.253:8080');
-    const logvalue = [];
     ws.onopen = () => {
-      console.log('连接上 ws 服务端了');
+      const { logContent } = this.state;
+      logContent.push('system: 已连接 websocket 服务器');
+      this.setState({
+        logContent,
+      });
       ws.send('Hello Server!'); // 给服务端发送数据
     };
     ws.onmessage = msg => {
       // msg.data 接收服务端传递过来的数据
-      console.log(msg.data);
-      logvalue.push(msg.data);
-      if (logvalue.length > 15) {
-        logvalue.shift();
+      const { logContent } = this.state;
+      logContent.push('system: 已连接 websocket 服务器');
+      logContent.push(msg.data);
+      if (logContent.length > 15) {
+        logContent.shift();
       }
-      console.log(logvalue);
-      this.setState({ logContent: logvalue.join('\n') });
+      this.setState({ logContent });
     };
 
-    ws.onclose = function() {
-      console.log('Socket已关闭');
+    ws.onclose = () => {
+      const { logContent } = this.state;
+      logContent.push('system: 已关闭与 websocket 服务器的连接');
+      this.setState({
+        logContent,
+      });
     };
-    // 发生了错误事件
-    ws.onerror = function() {
-      console.log('发生了错误');
+
+    ws.onerror = () => {
+      const { logContent } = this.state;
+      logContent.push('system: 与 websocket 服务器的连接发生了错误');
+      this.setState({
+        logContent,
+      });
     };
 
     const params = {};
@@ -126,8 +140,6 @@ class TinySimPage extends Component {
     const { filepath, proname, confpath } = this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log('=============handleSubmit================');
-      console.log(fieldsValue);
       dispatch({
         type: 'tinysim/tinysimUpload',
         payload: {
@@ -142,9 +154,7 @@ class TinySimPage extends Component {
 
   handleCmd = () => {
     const { dispatch } = this.props;
-    const { historycmd } = this.state;
-    const { curCmd } = this.refs.myInput.input.value;
-    console.log(curCmd);
+    const { historycmd, curCmd } = this.state;
     let str = curCmd;
     let hcmd = historycmd;
     const myData = new Date();
@@ -158,9 +168,9 @@ class TinySimPage extends Component {
         cmd: curCmd,
       },
     });
-    console.log('===清空==');
-    console.log(this.refs.myInput);
-    this.refs.myInput.state.value = '';
+    this.setState({
+      curCmd: '',
+    });
   };
 
   next() {
@@ -173,6 +183,12 @@ class TinySimPage extends Component {
     const { current } = this.state;
     const prev = current - 1;
     this.setState({ current: prev });
+  }
+
+  handleCmdInputChange(value) {
+    this.setState({
+      curCmd: value,
+    });
   }
 
   render() {
@@ -194,12 +210,10 @@ class TinySimPage extends Component {
       logContent,
       historycmd,
       proname,
+      curCmd,
     } = this.state;
-    const { form, cmdRes, logres } = this.props;
+    const { form, cmdRes } = this.props;
     const { getFieldDecorator } = form;
-    console.log('======================render============================');
-    console.log(`logres:${logres}`);
-    console.log(`cmdRes:${cmdRes}`);
     const titleCont = (
       <Row gutter={48}>
         <Col span={12}>
@@ -212,6 +226,7 @@ class TinySimPage extends Component {
         </Col>
       </Row>
     );
+
     const localcompstep = [
       {
         title: '选择文件',
@@ -244,7 +259,7 @@ class TinySimPage extends Component {
               </FormItem>
             </Form>
             <Card style={{ marginBottom: 24 }} bordered={false} title={titleCont}>
-              <TextArea rows={8} value={logContent} readOnly />
+              <TextArea rows={8} value={logContent.join('\n')} readOnly />
             </Card>
           </div>
         ),
@@ -257,9 +272,10 @@ class TinySimPage extends Component {
               <Col xl={16} lg={24} md={24} sm={24} xs={24}>
                 <Card style={{ marginBottom: 24 }} bordered={false} title="调试">
                   <Input
-                    ref="myInput"
-                    onPressEnter={this.handleCmd.bind(this)}
+                    onPressEnter={() => this.handleCmd()}
+                    onChange={event => this.handleCmdInputChange(event.target.value)}
                     size="large"
+                    value={curCmd}
                     placeholder="请输入调试命令"
                   />
                   <TextArea value={cmdRes} rows={19} readOnly />
@@ -267,19 +283,19 @@ class TinySimPage extends Component {
               </Col>
               <Col xl={8} lg={24} md={24} sm={24} xs={24}>
                 <Card style={{ marginBottom: 24 }} bordered={false} title="调试命令">
-                  <Tooltip title="prompt text">
+                  <Tooltip title="state">
                     <p>state</p>
                   </Tooltip>
-                  <Tooltip title="prompt text">
+                  <Tooltip title="delay">
                     <p>delay</p>
                   </Tooltip>
-                  <Tooltip title="prompt text">
+                  <Tooltip title="power">
                     <p>power</p>
                   </Tooltip>
-                  <Tooltip title="prompt text">
+                  <Tooltip title="quit">
                     <p>quit</p>
                   </Tooltip>
-                  <Tooltip title="prompt text">
+                  <Tooltip title="clear">
                     <p>clear</p>
                   </Tooltip>
                 </Card>
@@ -291,14 +307,6 @@ class TinySimPage extends Component {
           </div>
         ),
       },
-      // {
-      //   title: '烧录',
-      //   content: (
-      //     <div>
-      //       <Button>一键烧写</Button>
-      //     </div>
-      //   ),
-      // },
     ];
 
     return (

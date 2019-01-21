@@ -3,13 +3,11 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { Form, Radio, Input, Button, Select, DatePicker, Row, Col, Popover, Progress } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Popover, Progress } from 'antd';
 import styles from './Register.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const RadioGroup = Radio.Group;
-const InputGroup = Input.Group;
 
 const passwordStatusMap = {
   ok: (
@@ -42,7 +40,6 @@ const passwordProgressMap = {
 @Form.create()
 class Register extends Component {
   state = {
-    count: 0,
     confirmDirty: false,
     visible: false,
     help: '',
@@ -64,7 +61,7 @@ class Register extends Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  
+
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('pass1');
@@ -158,44 +155,26 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-      },
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 14,
-          offset: 6,
-        },
-      },
-    };
+    const { help, visible } = this.state;
     return (
       <div className={styles.main}>
         <h3>
           <FormattedMessage id="app.register.register" /> <br />
-          账户信息
         </h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('username', {
-              rules: [{
-                required: true, 
-                message: formatMessage({ id: 'validation.username.required' }),
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.username.required' }),
+                },
+              ],
             })(
-              <Input size='large' placeholder={formatMessage({ id: 'form.username.placeholder' })}/>
+              <Input
+                size="large"
+                placeholder={formatMessage({ id: 'form.username.placeholder' })}
+              />
             )}
           </FormItem>
 
@@ -223,7 +202,7 @@ class Register extends Component {
                 ],
               })(
                 <Input
-                  size='large'
+                  size="large"
                   type="password"
                   placeholder={formatMessage({ id: 'form.password.placeholder' })}
                 />
@@ -231,80 +210,90 @@ class Register extends Component {
             </Popover>
           </FormItem>
           <FormItem>
-              {getFieldDecorator('pass2', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'validation.confirm-password.required' }),
-                  },
-                  {
-                    validator: this.checkConfirm,
-                  },
-                ],
-              })(
-                <Input
-                  size='large'
-                  type="password"
-                  placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
-                />
-              )}
-            </FormItem>
-            <h3>
-              个人信息 <br />
-            </h3>
-            <FormItem>
-            {getFieldDecorator('full_name', {
-              rules: [{
-                required: true, 
-                message: formatMessage({ id: 'validation.full_name.required' }),
-              }],
+            {getFieldDecorator('pass2', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.confirm-password.required' }),
+                },
+                {
+                  validator: this.checkConfirm,
+                },
+              ],
             })(
-              <Input size='large' placeholder={formatMessage({ id: 'form.full_name.placeholder' })}/>
+              <Input
+                size="large"
+                type="password"
+                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
+              />
             )}
           </FormItem>
-          
-
+          <h3>
+            个人信息 <br />
+          </h3>
           <FormItem>
-            {getFieldDecorator('birthday', {
-            rules: [{ 
-              type: 'object', 
-              required: true, 
-              message: formatMessage({ id: 'validation.birthday.required' }),
-              }],
+            {getFieldDecorator('full_name', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.full_name.required' }),
+                },
+              ],
             })(
-              <DatePicker 
-              style={{ width: '100%' }}
-              size='large'
-              placeholder={formatMessage({ id: 'form.birthday.placeholder' })}
+              <Input
+                size="large"
+                placeholder={formatMessage({ id: 'form.full_name.placeholder' })}
               />
             )}
           </FormItem>
 
-          <FormItem
-            {...formItemLayout}
-            label= {formatMessage({ id: 'form.gender.placeholder' })}
-          >
-            {getFieldDecorator('gender', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.gender.required' }),
-              }],
+          <FormItem>
+            {getFieldDecorator('birthday', {
+              rules: [
+                {
+                  type: 'object',
+                  required: true,
+                  message: formatMessage({ id: 'validation.birthday.required' }),
+                },
+              ],
             })(
-              <RadioGroup>
-                <Radio value="1">男</Radio>
-                <Radio value="0">女</Radio>
-              </RadioGroup>
+              <DatePicker
+                style={{ width: '100%' }}
+                size="large"
+                placeholder={formatMessage({ id: 'form.birthday.placeholder' })}
+              />
+            )}
+          </FormItem>
+
+          <FormItem>
+            {getFieldDecorator('gender', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.gender.required' }),
+                },
+              ],
+            })(
+              <Select size="large" placeholder={formatMessage({ id: 'form.gender.placeholder' })}>
+                <Option value="1">男</Option>
+                <Option value="0">女</Option>
+              </Select>
             )}
           </FormItem>
 
           <FormItem>
             {getFieldDecorator('education', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.education.required' }),
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.education.required' }),
+                },
+              ],
             })(
-              <Select size='large' placeholder={formatMessage({ id: 'form.education.placeholder' })}>
+              <Select
+                size="large"
+                placeholder={formatMessage({ id: 'form.education.placeholder' })}
+              >
                 <Option value="Doctor and above">Doctor and above</Option>
                 <Option value="Master">Master</Option>
                 <Option value="Undergraduate">Undergraduate</Option>
@@ -314,12 +303,14 @@ class Register extends Component {
           </FormItem>
           <FormItem>
             {getFieldDecorator('job', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.job.required' }),
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.job.required' }),
+                },
+              ],
             })(
-              <Select size='large' placeholder={formatMessage({ id: 'form.job.placeholder' })}>
+              <Select size="large" placeholder={formatMessage({ id: 'form.job.placeholder' })}>
                 <Option value="Student">Student</Option>
                 <Option value="Teacher">Teacher</Option>
                 <Option value="Researcher">Researcher</Option>
@@ -330,12 +321,17 @@ class Register extends Component {
           </FormItem>
           <FormItem>
             {getFieldDecorator('iOT_familiar', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.iOT_familiar.required' }), 
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.iOT_familiar.required' }),
+                },
+              ],
             })(
-              <Select size='large' placeholder={formatMessage({ id: 'form.iOT_familiar.placeholder' })}>
+              <Select
+                size="large"
+                placeholder={formatMessage({ id: 'form.iOT_familiar.placeholder' })}
+              >
                 <Option value="None">None</Option>
                 <Option value="A Little">A Little</Option>
                 <Option value="Medium">Medium</Option>
@@ -345,12 +341,17 @@ class Register extends Component {
           </FormItem>
           <FormItem>
             {getFieldDecorator('embeded_familiar', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.embeded_familiar.required' }), 
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.embeded_familiar.required' }),
+                },
+              ],
             })(
-              <Select size='large' placeholder={formatMessage({ id: 'form.embeded_familiar.placeholder' })}>
+              <Select
+                size="large"
+                placeholder={formatMessage({ id: 'form.embeded_familiar.placeholder' })}
+              >
                 <Option value="None">None</Option>
                 <Option value="A Little">A Little</Option>
                 <Option value="Medium">Medium</Option>
@@ -360,12 +361,17 @@ class Register extends Component {
           </FormItem>
           <FormItem>
             {getFieldDecorator('lan_familiar', {
-              rules: [{ 
-                required: true, 
-                message: formatMessage({ id: 'validation.lan_familiar.required' }), 
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.lan_familiar.required' }),
+                },
+              ],
             })(
-              <Select size='large' placeholder={formatMessage({ id: 'form.lan_familiar.placeholder' })}>
+              <Select
+                size="large"
+                placeholder={formatMessage({ id: 'form.lan_familiar.placeholder' })}
+              >
                 <Option value="None">None</Option>
                 <Option value="A Little">A Little</Option>
                 <Option value="Medium">Medium</Option>
@@ -373,15 +379,12 @@ class Register extends Component {
               </Select>
             )}
           </FormItem>
-          <FormItem {...tailFormItemLayout}>
-            <Button
-              loading={submitting}
-              className={styles.submit}
-              type="primary"
-              htmlType="submit"
-            >
+          <FormItem>
+            <Button loading={submitting} className={styles.submit} type="primary" htmlType="submit">
               <FormattedMessage id="app.register.register" />
             </Button>
+          </FormItem>
+          <FormItem>
             <Link className={styles.login} to="/User/Login">
               <FormattedMessage id="app.register.sign-in" />
             </Link>
