@@ -193,9 +193,8 @@ class CardList extends PureComponent {
             )}
           </FormItem>
           <FormItem {...this.formLayout} label="项目描述">
-            {getFieldDecorator('description', {
-              rules: [{ message: '请输入至少五个字符的产品描述！', min: 5 }],
-            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
+            {getFieldDecorator('description')
+            (<TextArea rows={4} placeholder="请输入项目描述" />)}
           </FormItem>
         </Form>
       );

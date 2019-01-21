@@ -73,6 +73,18 @@ export default [
           },
         ],
       },
+      {
+        path: '/onelinkProject',
+        icon: 'form',
+        name: 'onelinkProject',
+        component: './OneLink/onelinkProject',
+        hideChildrenInMenu: true,
+        routes: [
+          {
+           
+          },
+        ],
+      },
 
       {
         component: '404',

@@ -3,7 +3,7 @@ import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import Result from '@/components/Result';
 import { connect } from 'dva';
-import { Spin, Button, Steps, Card, List, Collapse } from 'antd';
+import { Spin, Button, Steps, Card, Row, Col,List, Collapse } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './onelink.less';
 
@@ -126,30 +126,32 @@ class onelinkPage extends Component {
     //   const funcstr = strs.map(item => <li>{item}</li>);
     //   return <ol>{funcstr}</ol>;
     // };
-    const devInfo = () => {
-      
+
+    const devInfo = () => {  
       const devicelist = Object.keys(device).map(item => {
-        const devitem = device[item].map(value => (
-          <div>
-            <span>{value}</span>
-            <Button>Info</Button>
-            <Button>Burn</Button>
-          </div>
-        ))
-        return (<List.Item>
-          <List.Item.Meta
-            title = {
-            <div>
-              <span>{item}</span>
-              <Button>Info</Button>
-            </div>}
-            description = {devitem}
+        const headDetail = (
+          <Row >
+            <Col xl={12} lg={12}>{item}</Col>
+            <Col xl={12} lg={12}><Button>编译信息</Button></Col>
+          </Row>
+        )
+        const devitem = (
+        <Panel header={headDetail}>
+          <List
+          dataSource = {device[item]}
+          renderItem = {value => (
+          <List.Item 
+          actions={[<a>详细信息</a>, <a>一键烧写</a>]}
           >
-          </List.Item.Meta>
-        </List.Item>)
+          <div>{value}</div>
+          </List.Item>)}
+           />
+        </Panel>)
+        return devitem;
+       
       });
 
-      return (<List>{devicelist}</List>)
+      return (<Collapse>{devicelist}</Collapse>)
 
     };
     const getcompileDebug = () => {

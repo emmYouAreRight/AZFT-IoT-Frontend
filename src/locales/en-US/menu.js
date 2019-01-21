@@ -19,6 +19,7 @@ export default {
   'menu.list.searchlist.articles': 'Search List(articles)',
   'menu.list.searchlist.projects': 'Search List(projects)',
   'menu.list.searchlist.applications': 'Search List(applications)',
+  'menu.onelinkProject': 'OneLink Project',
   'menu.profile': 'Profile',
   'menu.profile.basic': 'Basic Profile',
   'menu.profile.advanced': 'Advanced Profile',

@@ -105,7 +105,18 @@ export async function tinylink(params) {
     })
   
   }
-
+  export async function onelinkDelPro(params) {
+    console.log(params);
+    const bodyForm = new FormData();
+    bodyForm.set('projectName', params.appName);
+  
+  
+    return request('/onelink/project/delete', {
+      method: 'POST',
+      data: bodyForm,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  }
 
   export async function onelinkCppDownload(params) {
     console.log('=============service调用onelinkCppDownload================');
