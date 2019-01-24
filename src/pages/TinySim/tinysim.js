@@ -232,7 +232,7 @@ class TinySimPage extends Component {
         title: '选择文件',
         content: (
           <div>
-            <Button onClick={() => this.onSelectFile('filepath')}>选择代码文件</Button>
+            <Button style={{marginTop: 36}} onClick={() => this.onSelectFile('filepath')}>选择代码文件</Button>
             <p>{filepath}</p>
             <Button onClick={() => this.onSelectFile('confpath')}>选择配置文件</Button>
             <p>{confpath}</p>

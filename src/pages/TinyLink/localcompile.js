@@ -205,10 +205,10 @@ class Localcomp extends Component {
         ),
       },
       {
-        title: '烧录',
+        title: '二进制代码',
         content: (
           <div>
-            <Button>一键烧写</Button>
+            <a href="http://api.daixinye.com/tinylink/downloadHex"><Button>下载代码</Button></a>
           </div>
         ),
       },
