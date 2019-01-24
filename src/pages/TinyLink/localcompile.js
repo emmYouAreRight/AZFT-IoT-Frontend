@@ -189,7 +189,7 @@ class Localcomp extends Component {
         title: '选择文件',
         content: (
           <div>
-            <Button onClick={onSelectFile}>选择文件</Button>
+            <Button style={{marginTop: 80}} onClick={onSelectFile}>选择文件</Button>
             <p>{filepath}</p>
           </div>
         ),
