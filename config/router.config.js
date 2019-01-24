@@ -33,12 +33,6 @@ export default [
         name: 'onelink',
         component: './OneLink/onelink',
       },
-      {
-        path: '/webview/debug',
-        icon: 'dashboard',
-        name: 'debug',
-        component: './webview/debug',
-      },
     ],
   },
   // user
@@ -79,11 +73,7 @@ export default [
         name: 'onelinkProject',
         component: './OneLink/onelinkProject',
         hideChildrenInMenu: true,
-        routes: [
-          {
-           
-          },
-        ],
+        routes: [{}],
       },
 
       {
