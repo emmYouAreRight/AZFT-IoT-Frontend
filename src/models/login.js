@@ -5,7 +5,7 @@ import { userLogin, userLogout } from '@/services/user';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
-import { setUserInfo } from '@/utils/userInfo'
+import { setUserInfo , setTinyID } from '@/utils/userInfo'
 
 export default {
   namespace: 'login',
@@ -76,6 +76,7 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       setUserInfo(payload.uid);
+      setTinyID(payload.tinyID);
       setAuthority(payload.currentAuthority);
       return {
         ...state,

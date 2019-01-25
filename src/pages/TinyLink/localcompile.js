@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import { Button, Steps, Card, List } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './localcompile.less';
+import { getTinyID } from '@/utils/userInfo';
 
 const { Step } = Steps;
 
@@ -116,7 +117,8 @@ class Localcomp extends Component {
       result: { result },
       loading,
     } = this.props;
-
+    let tinyid = getTinyID();
+    console.log(tinyid);
     const rurl = `${result.hardwareConnectionImg}`;
     const imgurl = `http://47.97.217.32/tinylink/${rurl.substring(3)}`;
     const getfunctionList = () => {
@@ -208,7 +210,7 @@ class Localcomp extends Component {
         title: '二进制代码',
         content: (
           <div>
-            <a href="http://api.daixinye.com/tinylink/downloadHex"><Button>下载代码</Button></a>
+            <a href= {`http://api.daixinye.com/tinylink/downloadHex?tinyID=${tinyid}`}><Button style={{marginTop: 80}}>下载代码</Button></a>
           </div>
         ),
       },
