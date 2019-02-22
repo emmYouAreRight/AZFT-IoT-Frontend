@@ -23,7 +23,7 @@ class TinySimPage extends Component {
     stepDirection: 'horizontal',
     current: 0,
     filepath: '/home/project/LED_Blink.cpp',
-    confpath: '/home/project/LED_config.json',
+    confpath: '/home/project/led.json',
     proname: 'mytest',
     historycmd: '',
     logContent: [], // 应用日志输出信息
@@ -57,7 +57,6 @@ class TinySimPage extends Component {
     ws.onmessage = msg => {
       // msg.data 接收服务端传递过来的数据
       const { logContent } = this.state;
-      logContent.push('system: 已连接 websocket 服务器');
       logContent.push(msg.data);
       if (logContent.length > 15) {
         logContent.shift();
@@ -269,7 +268,7 @@ class TinySimPage extends Component {
         content: (
           <div className={styles.tinysim}>
             <Row gutter={24} type="flex" align="top">
-              <Col xl={16} lg={24} md={24} sm={24} xs={24}>
+              <Col xl={16} lg={16} md={16} sm={24} xs={24}>
                 <Card style={{ marginBottom: 24 }} bordered={false} title="调试">
                   <Input
                     onPressEnter={() => this.handleCmd()}
@@ -281,7 +280,7 @@ class TinySimPage extends Component {
                   <TextArea value={cmdRes} rows={19} readOnly />
                 </Card>
               </Col>
-              <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+              <Col xl={8} lg={8} md={8} sm={24} xs={24}>
                 <Card style={{ marginBottom: 24 }} bordered={false} title="调试命令">
                   <Tooltip title="state">
                     <p>state</p>

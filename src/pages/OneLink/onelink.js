@@ -117,7 +117,6 @@ class onelinkPage extends Component {
       Drawervis: true,
     });
     e.stopPropagation();
-    e.stopImmediatePropagation();
   };
 
   handleDevInfo = (e, item) => {
@@ -248,7 +247,7 @@ class onelinkPage extends Component {
       return result.verbose ? (
         <ol>{compstr}</ol>
       ) : (
-        <div>
+        <div className={styles.compResult}>
           <Spin />
         </div>
       );
@@ -259,11 +258,11 @@ class onelinkPage extends Component {
       let info;
       let actions;
 
-      if (result.systemState === '1') {
+      if (result.systemState === 1) {
         res = 'success';
         title = '编译成功';
         info = '请按照硬件连接图进行组装硬件，确认连接正确后一键烧写';
-      } else if (result.systemState === '0') {
+      } else if (result.systemState === 0) {
         res = 'error';
         title = '编译失败';
         info = '请修改代码后重新编译';
