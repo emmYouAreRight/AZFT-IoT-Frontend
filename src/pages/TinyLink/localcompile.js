@@ -132,7 +132,7 @@ class Localcomp extends Component {
     const getcompileDebug = () => {
       let strs = [];
       strs = String(result.compileDebug).split('\n');
-      const compstr = strs.map(item => <li>{item}</li>);
+      const compstr = strs.map((item, index) => <li key={index}>{item}</li>);
       return <ol>{compstr}</ol>;
     };
     const getResult = () => {

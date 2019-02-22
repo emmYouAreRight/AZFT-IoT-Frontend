@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import Result from '@/components/Result';
-import { getUserInfo } from '@/utils/userInfo';
+import { getUserInfo, getOneID } from '@/utils/userInfo';
 import { connect } from 'dva';
 import { Spin, Button, Steps, Card, Row, Col, List, Collapse, Drawer, Modal } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -120,6 +120,7 @@ class onelinkPage extends Component {
   };
 
   handleDevInfo = (e, item) => {
+    e.preventDefault();
     const { dispatch } = this.props;
     const { proname } = this.state;
     dispatch({
@@ -185,6 +186,7 @@ class onelinkPage extends Component {
     } = this.state;
     const { result, device, loading, proCompres, devDetailInfo } = this.props;
     const user = getUserInfo();
+    const oneid = getOneID();
     const getImg = () => {
       const rurl = `${proCompres.imgpath}`;
       const imgurl = `http://ol.tinylink.cn/onelink/${rurl.substring(3)}`;
@@ -199,7 +201,11 @@ class onelinkPage extends Component {
     };
     // 获取设备端信息
     const devInfo = () => {
-      const devicelist = Object.keys(device).map(item => {
+      const dlist = Object.keys(device);
+      console.log('=======dlist========');
+      console.log(dlist);
+      const devicelist = Object.keys(device).map((item, i) => {
+        console.log(item);
         const headDetail = (
           <Row>
             <Col xl={12} lg={12}>
@@ -213,20 +219,15 @@ class onelinkPage extends Component {
           </Row>
         );
         const devitem = (
-          <Panel header={headDetail}>
+          <Panel key={i} header={headDetail}>
             <List
               dataSource={device[item]}
               renderItem={value => (
-                <List.Item
+                <List.Item key={value}
                   actions={[
                     <a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>,
-                    <a>一键烧写</a>,
+                    <a href={`tinylinkclient://api.daixinye.com/onelink/burn?oneID=${oneid}&projectName=${proname}&appName=${item}&devName=${value}`}>一键烧写</a>,
                   ]}
-                  // (<span>
-                  //   <a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>
-                  //   <Divider type="vertical" />
-                  //   <a>一键烧写</a>
-                  // </span>)}
                 >
                   <div>{value}</div>
                 </List.Item>
@@ -237,7 +238,7 @@ class onelinkPage extends Component {
         return devitem;
       });
 
-      return <Collapse>{devicelist}</Collapse>;
+      return <Collapse defaultActiveKey={['0']}>{devicelist}</Collapse>;
     };
     // 获取onelink编译信息
     const getcompileDebug = () => {
@@ -285,7 +286,7 @@ class onelinkPage extends Component {
         title: '选择文件',
         content: (
           <div>
-            <Button onClick={onSelectFile}>选择文件</Button>
+            <Button onClick={onSelectFile} style={{marginTop: 80}}>选择文件</Button>
             <p>{filepath}</p>
           </div>
         ),

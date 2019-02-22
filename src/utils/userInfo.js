@@ -39,3 +39,24 @@ export function getTinyID(str) {
   }
   return usertinyid;
 }
+
+export function setOneID(oneid) {
+
+  const proOneid = typeof oneid === 'string' ? [oneid] : oneid;
+  return localStorage.setItem('oneid', JSON.stringify(proOneid));
+}
+
+export function getOneID(str) {
+  const oneid =
+    typeof str === 'undefined' ? localStorage.getItem('oneid') : str;
+  let useroneid;
+  try {
+    useroneid = JSON.parse(oneid);
+  } catch (e) {
+    useroneid = oneid;
+  }
+  if (typeof useroneid === 'string') {
+    return [useroneid];
+  }
+  return useroneid;
+}
