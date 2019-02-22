@@ -111,7 +111,9 @@ class CardList extends PureComponent {
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>Web IDE工作空间，使用Theia进行物联网应用开发，可以连接TinyLink，TinySim，OneLink，UDC</p>
-        <div className={styles.contentLink} />
+        <div className={styles.contentLink}>
+          <a href="http://api.daixinye.com/onelink/download/webide_burn">下载一键烧写驱动</a>
+        </div>
       </div>
     );
 

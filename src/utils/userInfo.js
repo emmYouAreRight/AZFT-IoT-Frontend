@@ -1,6 +1,6 @@
 export function getUserInfo(str) {
   const userString =
-    typeof str === 'undefined' ? sessionStorage.getItem('username') : str;
+    typeof str === 'undefined' ? localStorage.getItem('username') : str;
   let userinfo;
   try {
     userinfo = JSON.parse(userString);
@@ -16,7 +16,7 @@ export function getUserInfo(str) {
 export function setUserInfo(userinfo) {
 
   const proUserinfo = typeof userinfo === 'string' ? [userinfo] : userinfo;
-  return sessionStorage.setItem('username', JSON.stringify(proUserinfo));
+  return localStorage.setItem('username', JSON.stringify(proUserinfo));
 }
 
 export function setTinyID(tinyid) {
