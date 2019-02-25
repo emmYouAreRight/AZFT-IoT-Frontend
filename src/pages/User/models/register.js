@@ -1,7 +1,7 @@
 import { userRegister } from '@/services/user';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
-
+import { setUserInfo } from '@/utils/userInfo'
 export default {
   namespace: 'register',
 
@@ -11,6 +11,7 @@ export default {
 
   effects: {
     *submit({ payload }, { call, put }) {
+      setUserInfo(payload.username);
       const response = yield call(userRegister, payload);
       yield put({
           type: 'registerHandle',
