@@ -177,7 +177,6 @@ class CardList extends PureComponent {
               item ? (
                 <List.Item key={item.id}>
                   <Card
-                    hoverable
                     className={styles.card}
                     actions={[
                       <a onClick={this.handleOpen.bind(this, item)}>开启</a>,

@@ -39,7 +39,8 @@ class onelinkPage extends Component {
     stepDirection: 'horizontal',
     current: 0,
     filepath: '/home/project/Case3.cpp',
-    proname: 'mytest',
+    proname: '',
+    uid: '',
     Drawervis: false,
     Modalvis: false,
     curInstance: '',
@@ -64,9 +65,10 @@ class onelinkPage extends Component {
         const [k, v] = value.split('=');
         params[k] = v;
       });
-    const { projectname } = params;
+    const { projectname, username } = params;
     this.setState({
       proname: projectname,
+      uid: username,
     });
   }
 
@@ -181,12 +183,11 @@ class onelinkPage extends Component {
       filepath,
       curInstance,
       proname,
+      uid,
       Drawervis,
       Modalvis,
     } = this.state;
     const { result, device, loading, proCompres, devDetailInfo } = this.props;
-    const user = getUserInfo();
-    const oneid = getOneID();
     const getImg = () => {
       const rurl = `${proCompres.imgpath}`;
       const imgurl = `http://ol.tinylink.cn/onelink/${rurl.substring(3)}`;
@@ -201,11 +202,7 @@ class onelinkPage extends Component {
     };
     // 获取设备端信息
     const devInfo = () => {
-      const dlist = Object.keys(device);
-      console.log('=======dlist========');
-      console.log(dlist);
       const devicelist = Object.keys(device).map((item, i) => {
-        console.log(item);
         const headDetail = (
           <Row>
             <Col xl={12} lg={12}>
@@ -226,7 +223,7 @@ class onelinkPage extends Component {
                 <List.Item key={value}
                   actions={[
                     <a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>,
-                    <a href={`tinylinkclient://api.daixinye.com/onelink/burn?oneID=${oneid}&projectName=${proname}&appName=${item}&devName=${value}`}>一键烧写</a>,
+                    <a href={`tinylinkclient://api.daixinye.com/onelink/burn?UID=${uid}&projectName=${proname}&appName=${item}&devName=${value}`}>一键烧写</a>,
                   ]}
                 >
                   <div>{value}</div>
@@ -249,7 +246,7 @@ class onelinkPage extends Component {
         <ol>{compstr}</ol>
       ) : (
         <div className={styles.compResult}>
-          <Spin />
+          <Spin tip="Loading..."/>
         </div>
       );
     };
@@ -368,7 +365,7 @@ class onelinkPage extends Component {
                   <li>{`Data Topic:${devDetailInfo.hash_id}/data`}</li>
                   <li>{`Event Topic:${devDetailInfo.hash_id}/data`}</li>
                   <li>{`Service Topic:${devDetailInfo.hash_id}/service`}</li>
-                  <li>{`Username:${user}`}</li>
+                  <li>{`Username:${uid}`}</li>
                   <li>Service Name:tinylink.cn</li>
                   <li>{`Client Name:${devDetailInfo.hash_id}`}</li>
                   <li>Password:user password</li>

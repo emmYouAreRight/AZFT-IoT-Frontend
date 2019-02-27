@@ -105,7 +105,7 @@ class OnelinkProList extends PureComponent {
             renderItem={item =>
                 (
                 <List.Item key={item.appID}>
-                  <Card hoverable className={styles.card} actions={[
+                  <Card className={styles.card} actions={[
                   <a onClick={this.handleOpen.bind(this, item)}>开启</a>, 
                   <a onClick={this.handleDelete.bind(this, item)}>删除</a>]
                   }>

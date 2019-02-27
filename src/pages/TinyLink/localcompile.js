@@ -3,7 +3,7 @@ import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import Result from '@/components/Result';
 import { connect } from 'dva';
-import { Button, Steps, Card, List } from 'antd';
+import { Button, Steps, Card, List, Spin } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './localcompile.less';
 import { getTinyID, getUserInfo } from '@/utils/userInfo';
@@ -26,9 +26,9 @@ function onSelectFile() {
   window.parent.postMessage(messageData, '*');
 }
 
-@connect(({ result, loading }) => ({
-  result,
-  loading: loading.models.result,
+@connect(({ tinylink }) => ({
+  result: tinylink.result,
+  btnstate: tinylink.btnstate,
 }))
 class Localcomp extends Component {
   state = {
@@ -36,6 +36,7 @@ class Localcomp extends Component {
     current: 0,
     filepath: '/home/project/test.cpp',
     proname: 'example',
+    uid: '',
   };
 
   componentDidMount() {
@@ -57,9 +58,10 @@ class Localcomp extends Component {
         const [k, v] = value.split('=');
         params[k] = v;
       });
-    const { projectname } = params;
+    const { projectname, username } = params;
     this.setState({
       proname: projectname,
+      uid: username,
     });
   }
 
@@ -92,8 +94,9 @@ class Localcomp extends Component {
     switch (next) {
       // 第二步
       case 1:
+        this.setState({ btnstate: true });
         dispatch({
-          type: 'result/tinylinkResult',
+          type: 'tinylink/tinylinkResult',
           payload: {
             filepath,
             proname,
@@ -102,7 +105,9 @@ class Localcomp extends Component {
         break;
       default:
     }
-    this.setState({ current: next });
+    this.setState({ 
+      current: next,
+    });
   }
 
   prev() {
@@ -112,20 +117,18 @@ class Localcomp extends Component {
   }
 
   render() {
-    const { stepDirection, current, filepath, proname } = this.state;
+    const { stepDirection, current, filepath, proname, uid } = this.state;
     const {
-      result: { result },
-      loading,
+      result,
+      btnstate,
     } = this.props;
-    const tinyid = getTinyID();
-    const useruid = getUserInfo();
-    console.log(tinyid);
+
     const rurl = `${result.hardwareConnectionImg}`;
     const imgurl = `http://47.97.217.32/tinylink/${rurl.substring(3)}`;
     const getfunctionList = () => {
       let strs = [];
       strs = String(result.functionList).split('\r\n');
-      const funcstr = strs.map(item => <li>{item}</li>);
+      const funcstr = strs.map((item,i) => <li key={i}>{item}</li>);
       return <ol>{funcstr}</ol>;
     };
 
@@ -133,7 +136,8 @@ class Localcomp extends Component {
       let strs = [];
       strs = String(result.compileDebug).split('\n');
       const compstr = strs.map((item, index) => <li key={index}>{item}</li>);
-      return <ol>{compstr}</ol>;
+      return  (<ol>{compstr}</ol>);
+
     };
     const getResult = () => {
       let res = '';
@@ -161,7 +165,8 @@ class Localcomp extends Component {
             </List>
           </Fragment>
         );
-      } else {
+      } 
+      else if(result.systemState === '0'){
         res = 'error';
         title = '编译失败';
         info = '请修改代码后重新编译';
@@ -175,7 +180,7 @@ class Localcomp extends Component {
           </Fragment>
         );
       }
-      return (
+      return result.systemState? (
         <Result
           type={res}
           title={title}
@@ -184,6 +189,10 @@ class Localcomp extends Component {
           actions={actions}
           style={{ marginTop: 48, marginBottom: 16 }}
         />
+      ) : (
+        <div className={styles.compResult}>
+          <Spin tip="Loading..."/>
+        </div>
       );
     };
 
@@ -201,7 +210,7 @@ class Localcomp extends Component {
         title: '编译',
         content: (
           <div>
-            <Card bordered={false} loading={loading}>
+            <Card bordered={false} style={{minHeight: 200}}>
               {getResult()}
             </Card>
           </div>
@@ -212,10 +221,10 @@ class Localcomp extends Component {
         content: (
           <div>
             <div>
-              <a href={`http://api.daixinye.com/tinylink/downloadHex?tinyID=${tinyid}`}><Button style={{marginTop: 80}}>下载代码</Button></a>
+              <a href={`http://api.daixinye.com/tinylink/downloadHex`}><Button type="primary" style={{marginTop: 45}}>下载代码</Button></a>
             </div>
-            <div style={{marginTop: 40}}>
-            <a href={`tinylinkclient://api.daixinye.com/tinylink/burn?tinyID=${tinyid}&userUId=${useruid}`}><Button>一键烧写</Button></a>
+            <div style={{marginTop: 45}}>
+            <a href={`tinylinkclient://api.daixinye.com/tinylink/burn?&UID=${uid}`}><Button type="primary" >一键烧写</Button></a>
             </div>
           </div>
           
@@ -237,7 +246,7 @@ class Localcomp extends Component {
             <div className={styles.stepsContent}>{localcompstep[current].content}</div>
             <div className={styles.stepsAction}>
               {current < localcompstep.length - 1 && (
-                <Button type="primary" onClick={() => this.next()}>
+                <Button type="primary" onClick={() => this.next()} disabled={current === 1 ? btnstate : false}>
                   下一步
                 </Button>
               )}
