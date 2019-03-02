@@ -190,7 +190,7 @@ class onelinkPage extends Component {
     const { result, device, loading, proCompres, devDetailInfo } = this.props;
     const getImg = () => {
       const rurl = `${proCompres.imgpath}`;
-      const imgurl = `http://ol.tinylink.cn/onelink/${rurl.substring(3)}`;
+      const imgurl = `http://demo.tinylink.cn/onelink/${rurl.substring(3)}`;
       return imgurl;
     };
     // 获取设备端tinylink编译信息

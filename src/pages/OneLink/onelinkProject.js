@@ -13,7 +13,9 @@ import { Card, Button, Icon, List,
   Modal,
   Form,
   DatePicker,
-  Select
+  Select,
+  Divider,
+  Switch
 } from 'antd';
 
 import Ellipsis from '@/components/Ellipsis';
@@ -30,9 +32,17 @@ const { Search, TextArea } = Input;
 @connect(({ onelinkpro, loading }) => ({
   projectlist: onelinkpro.prolist,
   loading: loading.models.onelinkpro,
+  mobileInfo: onelinkpro.mobileInfo,
+  policyInfo: onelinkpro.policyInfo,
+  htmlContent: onelinkpro.htmlContent,
 }))
 @Form.create()
 class OnelinkProList extends PureComponent {
+  state = {
+    visible: false,
+    proName: '',
+    mobileVisible: false,
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -43,10 +53,39 @@ class OnelinkProList extends PureComponent {
     });
   };
 
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  mobileModalClose = () => {
+    this.setState({
+      mobileVisible: false,
+    });
+  };
 
   handleOpen = item => {
-    
-
+    const { dispatch } = this.props;
+    console.log(item);
+    dispatch({
+      type: 'onelinkpro/getMobileInfo',
+      payload: {
+        ftype: 'fetchMobileInProject',
+        proname: item.appName,
+      },
+    });
+    dispatch({
+      type: 'onelinkpro/getPolicyInfo',
+      payload: {
+        ftype: 'fetchPolicyInProject',
+        proname: item.appName,
+      },
+    });
+    this.setState({
+      proName: item.appName,
+      visible: true,  
+    });
   }
 
   handleDelete = item => {
@@ -59,13 +98,36 @@ class OnelinkProList extends PureComponent {
 
   }
 
+  handleClick = item => {
+
+    const { dispatch } = this.props;
+    const { proName } = this.state;
+    console.log('=============handleClick================');
+    console.log(item);
+    dispatch({
+      type: 'onelinkpro/getHtml',
+      payload: {
+        mobilename: item.mobileName,
+        proname: proName,
+      },
+    });
+
+    this.setState({
+      mobileVisible: true,  
+    });
+  };
 
   render() {
     const {
       projectlist,
       loading,
+      mobileInfo,
+      policyInfo,
+      htmlContent
     } = this.props;
-    console.log(projectlist);
+    const { visible, proName } = this.state;
+    console.log("============htmlContent==================");
+    console.log(htmlContent);
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
@@ -93,7 +155,37 @@ class OnelinkProList extends PureComponent {
         {bordered && <em />}
       </div>
     );
-
+    
+    const getModalContent = (
+      <div>
+        <div>
+          <h2>Mobile</h2>
+          <List
+            dataSource={mobileInfo}
+            renderItem={item => (
+              <List.Item key={item.mobileName}>
+                <a target="controlPanel" onClick={this.handleClick.bind(this, item)}>{item.mobileName}</a>
+              </List.Item>
+            )}
+          />
+        </div>
+        <Divider />
+        <div>
+          <h2>Policy</h2>
+          <List
+            dataSource={policyInfo}
+            renderItem={item => (
+              <List.Item key={item.name}>
+                <List.Item.Meta
+                title={item.name}
+                description={<Switch checkedChildren="Start" unCheckedChildren="Stop" defaultChecked />}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
+      </div>
+    );
     return (
       <PageHeaderWrapper title="OneLink项目管理" content={content} extraContent={extraContent}>
         <div className={styles.cardList}>
@@ -123,6 +215,24 @@ class OnelinkProList extends PureComponent {
               ) }
           />
         </div>
+        <Modal
+          title={this.state.proName}
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+        >
+          {getModalContent}
+        </Modal>
+        <Modal
+          visible={this.state.mobileVisible}
+          onCancel={this.mobileModalClose}
+          footer={[
+            <Button key="back" onClick={this.mobileModalClose}>
+              知道了
+            </Button>,
+          ]}
+        >
+          <iframe name="controlPanel" srcdoc={`${htmlContent}`}></iframe>
+        </Modal>
       </PageHeaderWrapper>
     );
   }

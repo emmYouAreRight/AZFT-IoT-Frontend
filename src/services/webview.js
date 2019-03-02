@@ -134,7 +134,21 @@ export async function tinylink(params) {
     console.log(params);
     return request(`/onelink/project/file/download?${stringify(params)}`);
   }
+
+  export async function onelinkHtml(params) {
+    console.log('=============service调用onelinkHtml================');
+    console.log(params);
+    const bodyForm = new FormData();
+    bodyForm.set('mobileName', params.mobilename);
+    bodyForm.set('projectName', params.proname);
   
+    return request('/onelink/mobile/getHtml', {
+      method: 'POST',
+      data: bodyForm,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  
+  }
   export async function test() {
     return request('http://ol.tinylink.cn/onelink/project_module/project_control.php?type=rawData&dataSource=649%2C646');
   }
