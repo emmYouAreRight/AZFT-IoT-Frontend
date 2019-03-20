@@ -63,8 +63,6 @@ export default {
       console.log(response);
       if(response.status == 'ok') {
         const res = response.data;
-        console.log("==========getHtml=============");
-        console.log(res);
         yield put({
             type: 'saveHtml',
             payload: res,

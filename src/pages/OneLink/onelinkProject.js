@@ -41,6 +41,7 @@ class OnelinkProList extends PureComponent {
   state = {
     visible: false,
     proName: '',
+    appName: '',
     mobileVisible: false,
   }
 
@@ -113,7 +114,8 @@ class OnelinkProList extends PureComponent {
     });
 
     this.setState({
-      mobileVisible: true,  
+      mobileVisible: true, 
+      appName: item.mobileName,
     });
   };
 
@@ -125,9 +127,7 @@ class OnelinkProList extends PureComponent {
       policyInfo,
       htmlContent
     } = this.props;
-    const { visible, proName } = this.state;
-    console.log("============htmlContent==================");
-    console.log(htmlContent);
+    const { visible, proName, appName} = this.state;
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
@@ -231,7 +231,7 @@ class OnelinkProList extends PureComponent {
             </Button>,
           ]}
         >
-          <iframe name="controlPanel" srcdoc={`${htmlContent}`}></iframe>
+          <iframe src={`http://demo.tinylink.cn/home/view/project_data_viewer.php?appName=${appName}&project=${proName}&description=`} frameBorder="0" name="controlPanel" width="375px" height="667px"></iframe>
         </Modal>
       </PageHeaderWrapper>
     );
