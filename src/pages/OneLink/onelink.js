@@ -43,6 +43,7 @@ class onelinkPage extends Component {
     uid: '',
     Drawervis: false,
     Modalvis: false,
+    curappName: '',
     curInstance: '',
   };
 
@@ -117,6 +118,7 @@ class onelinkPage extends Component {
     });
     this.setState({
       Drawervis: true,
+      curappName: item,
     });
     e.stopPropagation();
   };
@@ -181,6 +183,7 @@ class onelinkPage extends Component {
       stepDirection,
       current,
       filepath,
+      curappName,
       curInstance,
       proname,
       uid,
@@ -372,7 +375,7 @@ class onelinkPage extends Component {
                 </ol>
               }
             />
-            <Meta title="下载tinylink源代码" description={<Button>下载</Button>} />
+            <Meta title="下载tinylink源代码" description={<a href={`http://api.daixinye.com/onelink/project/file/download?projectName=${proname}&appName=${curappName}&instance=${curInstance}`}><Button>下载</Button></a>} />
           </Card>
         </Modal>
       </PageHeaderWrapper>
