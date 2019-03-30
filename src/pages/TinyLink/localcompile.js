@@ -124,7 +124,7 @@ class Localcomp extends Component {
     } = this.props;
 
     const rurl = `${result.hardwareConnectionImg}`;
-    const imgurl = `http://47.97.217.32/tinylink/${rurl.substring(3)}`;
+    const imgurl = `http://tinylink.cn:12352/tinylink/${rurl.substring(3)}`;
     const getfunctionList = () => {
       let strs = [];
       strs = String(result.functionList).split('\r\n');
