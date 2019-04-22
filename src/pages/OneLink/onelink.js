@@ -226,7 +226,7 @@ class onelinkPage extends Component {
                 <List.Item key={value}
                   actions={[
                     <a onClick={e => this.handleDevInfo(e, value)}>详细信息</a>,
-                    <a href={`tinylinkclient://api.daixinye.com/onelink/burn?UID=${uid}&projectName=${proname}&appName=${item}&devName=${value}`}>一键烧写</a>,
+                    <a href={`tinylinkclient://api.tinylink.cn/onelink/burn?UID=${uid}&projectName=${proname}&appName=${item}&devName=${value}`}>一键烧写</a>,
                   ]}
                 >
                   <div>{value}</div>
@@ -375,7 +375,7 @@ class onelinkPage extends Component {
                 </ol>
               }
             />
-            <Meta title="下载tinylink源代码" description={<a href={`http://api.daixinye.com/onelink/project/file/download?projectName=${proname}&appName=${curappName}&instance=${curInstance}`}><Button>下载</Button></a>} />
+            <Meta title="下载tinylink源代码" description={<a href={`http://api.tinylink.cn/onelink/project/file/download?projectName=${proname}&appName=${curappName}&instance=${curInstance}`}><Button>下载</Button></a>} />
           </Card>
         </Modal>
       </PageHeaderWrapper>

@@ -219,7 +219,7 @@ class TinySimPage extends Component {
           <span>应用日志</span>
         </Col>
         <Col span={12}>
-          <a href="http://api.daixinye.com/tinysim/download_log">
+          <a href="http://api.tinylink.cn/tinysim/download_log">
             <Button type="primary">下载日志</Button>
           </a>
         </Col>

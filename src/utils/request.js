@@ -27,7 +27,7 @@ function checkStatus(response) {
   }
 }
 
-axios.defaults.baseURL = 'http://api.daixinye.com';
+axios.defaults.baseURL = 'http://api.tinylink.cn';
 axios.defaults.withCredentials = true;
 /**
  * Requests a URL, returning a promise.

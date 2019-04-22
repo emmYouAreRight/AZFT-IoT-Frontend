@@ -221,10 +221,10 @@ class Localcomp extends Component {
         content: (
           <div>
             <div>
-              <a href={`http://api.daixinye.com/tinylink/downloadHex`}><Button type="primary" style={{marginTop: 45}}>下载代码</Button></a>
+              <a href={`http://api.tinylink.cn/tinylink/downloadHex`}><Button type="primary" style={{marginTop: 45}}>下载代码</Button></a>
             </div>
             <div style={{marginTop: 45}}>
-            <a href={`tinylinkclient://api.daixinye.com/tinylink/burn?&UID=${uid}`}><Button type="primary" >一键烧写</Button></a>
+            <a href={`tinylinkclient://api.tinylink.cn/tinylink/burn?&UID=${uid}`}><Button type="primary" >一键烧写</Button></a>
             </div>
           </div>
           
